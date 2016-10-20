@@ -4,7 +4,9 @@
   (:use #:cl)
   (:import-from #:cl-ppcre
                 #:create-scanner
-                #:scan))
+                #:scan)
+  (:import-from #:flexi-streams
+                #:with-output-to-sequence))
 
 (defpackage #:zacl-reader
   (:use #:cl)
@@ -29,7 +31,8 @@
            #:*cl-default-special-bindings*)
   (:export #:match-regexp
            #:match-re
-           #:replace-regexp))
+           #:replace-regexp)
+  (:export #:with-output-to-buffer))
 
 (defpackage #:ff
   (:use)

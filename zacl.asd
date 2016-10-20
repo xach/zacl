@@ -8,7 +8,8 @@
   :depends-on (#:uiop
                #:usocket
                #:bordeaux-threads
-               #:cl-ppcre)
+               #:cl-ppcre
+               #:flexi-streams)
   :serial t
   :components ((:file "package")
                (:file "reader")

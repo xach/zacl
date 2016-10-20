@@ -22,6 +22,7 @@ longer anonymous, but has a meaningful name name."
 (defun excl:featurep (feature)
   (find feature *features*))
 
+
 (defun excl:match-re (pattern string &key (return :string))
   (multiple-value-bind (start end regs-starts regs-ends)
       (scan pattern string)
@@ -38,3 +39,8 @@ longer anonymous, but has a meaningful name name."
 
 (defun excl:match-regexp (pattern string &key (return :string))
   (excl:match-re pattern string :return return))
+
+
+(defmacro excl:with-output-to-buffer ((stream) &body body)
+  `(with-output-to-sequence (,stream)
+     ,@body))
