@@ -7,6 +7,9 @@
 
 (defvar excl:*initial-terminal-io* *terminal-io*)
 
+(defvar excl:*cl-default-special-bindings* nil)
+
+
 (defmacro excl:named-function (name lambda-form)
   "Return the function produced by LAMBDA-FORM wrapped in a named
 function object. Useful for debugging, as the function object is no
