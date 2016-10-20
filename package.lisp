@@ -1,7 +1,10 @@
 ;;;; package.lisp
 
 (defpackage #:zacl
-  (:use #:cl))
+  (:use #:cl)
+  (:import-from #:cl-ppcre
+                #:create-scanner
+                #:scan))
 
 (defpackage #:zacl-reader
   (:use #:cl)
@@ -23,7 +26,10 @@
   (:export #:named-function
            #:featurep
            #:*initial-terminal-io*
-           #:*cl-default-special-bindings*))
+           #:*cl-default-special-bindings*)
+  (:export #:match-regexp
+           #:match-re
+           #:replace-regexp))
 
 (defpackage #:ff
   (:use)

@@ -5,6 +5,8 @@
 
 (in-package #:zacl)
 
+(defvar excl:*initial-terminal-io* *terminal-io*)
+
 (defmacro excl:named-function (name lambda-form)
   "Return the function produced by LAMBDA-FORM wrapped in a named
 function object. Useful for debugging, as the function object is no
@@ -20,5 +22,19 @@ longer anonymous, but has a meaningful name name."
 (defun excl:featurep (feature)
   (find feature *features*))
 
+(defun excl:match-re (pattern string &key (return :string))
+  (multiple-value-bind (start end regs-starts regs-ends)
+      (scan pattern string)
+    (when (and start end)
+      (ecase return
+        (:index
+         (values-list (list* (cons start end) (map 'list 'cons regs-starts regs-ends))))
+        (:string
+         (values-list (list* (subseq string start end)
+                             (map 'list (lambda (start end)
+                                          (subseq string start end))
+                                  regs-starts
+                                  regs-ends))))))))
 
-(defvar excl:*initial-terminal-io* *terminal-io*)
+(defun excl:match-regexp (pattern string &key (return :string))
+  (excl:match-re pattern string :return return))
