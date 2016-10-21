@@ -30,7 +30,8 @@
   (:export #:named-function
            #:featurep
            #:*initial-terminal-io*
-           #:*cl-default-special-bindings*)
+           #:*cl-default-special-bindings*
+           #:*required-top-level-bindings*)
   (:export #:match-regexp
            #:match-re
            #:replace-regexp)
@@ -46,6 +47,7 @@
   (:use)
   (:export #:make-socket
            #:accept-connection
+           #:socket-control
            #:local-port
            #:local-host
            #:set-socket-options
@@ -132,3 +134,7 @@
   (:use)
   (:export #:stat
            #:stat-mtime))
+
+(defpackage #:top-level.debug
+  (:use)
+  (:export #:zoom))
