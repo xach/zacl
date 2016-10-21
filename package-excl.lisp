@@ -47,3 +47,9 @@ longer anonymous, but has a meaningful name name."
 (defmacro excl:with-output-to-buffer ((stream) &body body)
   `(with-output-to-sequence (,stream)
      ,@body))
+
+
+;;; Streams
+
+(defmacro excl:sm (slot-name object)
+  `(slot-value ,object ',slot-name))

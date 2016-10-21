@@ -32,7 +32,8 @@
   (:export #:match-regexp
            #:match-re
            #:replace-regexp)
-  (:export #:with-output-to-buffer))
+  (:export #:with-output-to-buffer)
+  (:export #:sm))
 
 (defpackage #:ff
   (:use)
