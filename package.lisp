@@ -6,7 +6,9 @@
                 #:create-scanner
                 #:scan)
   (:import-from #:flexi-streams
-                #:with-output-to-sequence))
+                #:with-output-to-sequence)
+  (:import-from #:bordeaux-threads
+                #:current-thread))
 
 (defpackage #:zacl-reader
   (:use #:cl)
