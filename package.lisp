@@ -67,7 +67,8 @@
            #:*current-process*
            #:command-line-arguments
            #:*tilde-expand-namestrings*
-           #:gsgc-switch))
+           #:gsgc-switch
+           #:defpatch))
 
 (defpackage #:util.zip
   (:use)

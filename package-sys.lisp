@@ -7,3 +7,6 @@
 (defun sys::thread-bindstack-index (&rest args)
   (declare (ignore args))
   (error "Not implemented"))
+
+(defun sys:defpatch (&rest args)
+  (declare (ignore args)))
