@@ -5,10 +5,23 @@
 (defparameter *allegro-feature-symbols*
   '("VERSION>=" "VERSION="))
 
+(defparameter *allegro-version-feature* :zacl-allegro-10-0)
+(defparameter *allegro-latest-feature* :zacl-latest-allegro)
+
 (defun allegro-conditional-p (expression)
   (when (listp expression)
     (member (first expression) *allegro-feature-symbols*
             :test 'string-equal)))
+
+(defun rewrite-allegro-conditional (conditional)
+  (destructuring-bind (operator &rest operands)
+      conditional
+    (cond ((string-equal operator "VERSION>=")
+           *allegro-latest-feature*)
+          ((string-equal operator "VERSION=")
+           (intern (format nil "ZACL-ALLEGRO~{-~D~}" operands)))
+          (t
+           (error "Unknown allegro conditional operator -- ~S" operator)))))
 
 (defun rewrite-feature-expression (expression)
   (cond ((null expression)
@@ -16,7 +29,7 @@
         ((atom expression)
          expression)
         ((allegro-conditional-p expression)
-         'latest-allegro-conditional)
+         (rewrite-allegro-conditional expression))
         (t
          (cons (first expression)
                (mapcar #'rewrite-feature-expression (rest expression))))))
@@ -33,7 +46,9 @@
            (combined-stream (make-concatenated-stream expression-stream
                                                       (make-string-input-stream " ")
                                                       stream))
-           (*features* (list* :latest-allegro-conditional *features*)))
+           (*features* (list* *allegro-latest-feature*
+                              *allegro-version-feature*
+                              *features*)))
       (funcall original-reader-function combined-stream character nil))))
 
 (defparameter *allegro-rewriting-readtable*
