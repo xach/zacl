@@ -9,3 +9,4 @@
 (provide :streamc)
 (provide :sock)
 (provide :process)
+(provide :acldns)
