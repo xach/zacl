@@ -53,3 +53,16 @@ longer anonymous, but has a meaningful name name."
 
 (defmacro excl:sm (slot-name object)
   `(slot-value ,object ',slot-name))
+
+
+;;; Misc
+
+(defmacro excl:errorset (form &optional announce catch-breaks)
+  "Return NIL if FORM signals an error, T and values as multiple
+values otherwise."
+  (declare (ignore announce catch-breaks))
+  (let ((result (gensym "RESULT")))
+    `(let ((,result (multiple-value-list (ignore-errors ,form))))
+       (if (not (first ,result))
+           nil
+           (values-list (list* t ,result))))))

@@ -16,3 +16,25 @@
 (defun mp:make-process-lock ()
   (cons :mp :lock))
 
+
+;;; Gates
+
+(defgeneric mp:make-gate (initial-state))
+
+(defgeneric mp:open-gate (gate))
+
+(defgeneric mp:close-gate (gate))
+
+(defgeneric mp:gate-open-p (gate))
+
+
+;;; Processes
+
+(defgeneric mp:make-process (&key name initial-bindings))
+
+(defgeneric mp:process-thread (process))
+
+(defgeneric mp:process-name (process))
+
+
+

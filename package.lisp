@@ -35,7 +35,8 @@
            #:match-re
            #:replace-regexp)
   (:export #:with-output-to-buffer)
-  (:export #:sm))
+  (:export #:sm
+           #:errorset))
 
 (defpackage #:ff
   (:use)
@@ -65,7 +66,8 @@
            #:with-timeout
            #:*current-process*
            #:command-line-arguments
-           #:*tilde-expand-namestrings*))
+           #:*tilde-expand-namestrings*
+           #:gsgc-switch))
 
 (defpackage #:util.zip
   (:use)
@@ -91,6 +93,8 @@
 
 (defpackage #:mp
   (:use)
+  (:import-from #:sys
+                #:*current-process*)
   (:export #:with-timeout
            #:without-scheduling)
   (:export #:make-gate
@@ -115,6 +119,7 @@
            #:process-add-run-reason
            #:process-revoke-run-reason
            #:process-name
+           #:process-thread
            #:*current-process*))
 
 (defpackage #:si
