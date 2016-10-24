@@ -10,3 +10,6 @@
   (let ((*readtable* zacl-reader:*allegro-rewriting-readtable*))
     (compile-file file)))
 
+(defun acl (file)
+  (aload (acompile file)))
+

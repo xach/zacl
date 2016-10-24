@@ -56,6 +56,23 @@ longer anonymous, but has a meaningful name name."
 (defmacro excl:sm (slot-name object)
   `(slot-value ,object ',slot-name))
 
+(defmacro excl:def-stream-class (name (&rest parents) &body slot-defs)
+  `(defclass ,name (,@parents)
+     ,@slot-defs))
+
+(defmacro excl:with-stream-class ((class var) &body body)
+  (declare (ignore class var))
+  `(progn ,@body))
+
+(defgeneric excl:device-read (stream buffer start end blocking))
+
+(defgeneric excl:device-close (stream abort))
+
+(define-condition excl:stream-closed-error (error) ())
+
+(def-fake-slot excl::stream-property-list stream :default-value nil)
+(def-fake-slot excl:stream-error-identifier stream :default-value nil)
+(def-fake-slot excl:stream-error-code stream :default-value 0)
 
 ;;; Misc
 
@@ -69,5 +86,15 @@ values otherwise."
            nil
            (values-list (list* t ,result))))))
 
-(def-fake-slot excl::stream-property-list stream :default-value nil)
+(defun excl:find-external-format (name &key errorp)
+  (declare (ignore errorp))
+  (error "(find-external-format ~S) -- not implemented" name))
 
+(defun fixnump (integer)
+  (typep integer 'fixnum))
+
+(defun excl:split-into-words (string)
+  (split "\\s+" string))
+
+(defun excl:split-on-character (string character)
+  (split-sequence character string))

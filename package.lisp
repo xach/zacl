@@ -4,7 +4,10 @@
   (:use #:cl)
   (:import-from #:cl-ppcre
                 #:create-scanner
-                #:scan)
+                #:scan
+                #:split)
+  (:import-from #:split-sequence
+                #:split-sequence)
   (:import-from #:flexi-streams
                 #:with-output-to-sequence)
   (:import-from #:bordeaux-threads
@@ -53,6 +56,10 @@
            #:else)
   (:export #:named-function
            #:featurep
+           #:find-external-format
+           #:fixnump
+           #:split-into-words
+           #:split-on-character
            #:*initial-terminal-io*
            #:*cl-default-special-bindings*
            #:*required-top-level-bindings*)
@@ -60,6 +67,14 @@
            #:match-re
            #:replace-regexp)
   (:export #:with-output-to-buffer)
+  (:export #:def-stream-class
+           #:terminal-simple-stream
+           #:with-stream-class
+           #:device-read
+           #:device-close
+           #:stream-closed-error
+           #:stream-error-identifier
+           #:stream-error-code)
   (:export #:sm
            #:errorset))
 

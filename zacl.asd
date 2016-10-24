@@ -11,7 +11,8 @@
                #:cl-ppcre
                #:flexi-streams
                #:quri
-               #:trivial-garbage)
+               #:trivial-garbage
+               #:split-sequence)
   :serial t
   :components ((:file "package")
                (:file "defpackage-hack")
