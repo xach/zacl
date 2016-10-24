@@ -37,6 +37,13 @@
            #:thenret
            #:else))
 
+(defpackage #:zacl-cl
+  (:use)
+  (:export #:read-sequence
+           #:macroexpand))
+
+;;; Allegro packages
+
 (defpackage #:excl
   (:use #:zacl-if-star)
   (:intern #:stream-property-list)
@@ -77,7 +84,9 @@
 
 (defpackage #:user
   (:use #:cl
-        #:excl))
+        #:excl)
+  (:shadow #:defpackage)
+  (:export #:defpackage))
 
 (defpackage #:sys
   (:use)

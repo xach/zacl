@@ -14,6 +14,7 @@
                #:trivial-garbage)
   :serial t
   :components ((:file "package")
+               (:file "defpackage-hack")
                (:file "reader")
                (:file "fake-slots")
                (:file "if-star")
