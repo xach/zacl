@@ -9,6 +9,8 @@
 
 (defvar excl:*cl-default-special-bindings* nil)
 
+(defvar excl:*required-top-level-bindings* nil)
+
 
 (defmacro excl:named-function (name lambda-form)
   "Return the function produced by LAMBDA-FORM wrapped in a named
