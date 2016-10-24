@@ -9,7 +9,9 @@
                #:usocket
                #:bordeaux-threads
                #:cl-ppcre
-               #:flexi-streams)
+               #:flexi-streams
+               #:quri
+               #:trivial-garbage)
   :serial t
   :components ((:file "package")
                (:file "reader")
