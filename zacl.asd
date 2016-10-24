@@ -18,6 +18,7 @@
                (:file "package-si")
                (:file "package-excl")
                (:file "package-ff")
+               (:file "package-sys")
                (:file "utils")
                (:file "provides")))
 
