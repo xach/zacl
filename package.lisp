@@ -10,7 +10,21 @@
   (:import-from #:bordeaux-threads
                 #:current-thread)
   (:import-from #:trivial-garbage
-                #:make-weak-hash-table))
+                #:make-weak-hash-table)
+  (:import-from #:quri
+                #:make-uri
+                #:render-uri
+                #:uri
+                #:copy-uri
+                #:merge-uris
+                #:uri-path
+                #:uri-host
+                #:uri-scheme
+                #:uri-port
+                #:uri-fragment
+                #:uri-userinfo
+                #:uri-query
+                #:parse-uri))
 
 (defpackage #:zacl-reader
   (:use #:cl)
@@ -81,7 +95,11 @@
 
 (defpackage #:net.uri
   (:use)
+  (:intern #:uri-string
+           #:.uri-parsed-path
+           #:uri-path-etc)
   (:export #:uri-path
+           #:uri-plist
            #:copy-uri
            #:render-uri
            #:merge-uris

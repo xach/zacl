@@ -20,6 +20,7 @@
                (:file "package-excl")
                (:file "package-ff")
                (:file "package-sys")
+               (:file "package-net.uri")
                (:file "utils")
                (:file "provides")))
 
