@@ -8,7 +8,9 @@
   (:import-from #:flexi-streams
                 #:with-output-to-sequence)
   (:import-from #:bordeaux-threads
-                #:current-thread))
+                #:current-thread)
+  (:import-from #:trivial-garbage
+                #:make-weak-hash-table))
 
 (defpackage #:zacl-reader
   (:use #:cl)
@@ -23,6 +25,7 @@
 
 (defpackage #:excl
   (:use #:zacl-if-star)
+  (:intern #:stream-property-list)
   (:export #:if*
            #:then
            #:thenret

@@ -13,6 +13,7 @@
   :serial t
   :components ((:file "package")
                (:file "reader")
+               (:file "fake-slots")
                (:file "if-star")
                (:file "package-mp")
                (:file "package-si")

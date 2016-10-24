@@ -66,3 +66,6 @@ values otherwise."
        (if (not (first ,result))
            nil
            (values-list (list* t ,result))))))
+
+(def-fake-slot excl::stream-property-list stream :default-value nil)
+
