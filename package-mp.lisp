@@ -16,6 +16,9 @@
 (defun mp:make-process-lock (&key name)
   (cons :mp-lock name))
 
+(defmacro mp:without-scheduling (&body body)
+  `(progn ,@body))
+
 
 ;;; Gates
 
