@@ -65,7 +65,8 @@
 (defpackage #:excl
   (:use #:zacl-if-star)
   (:intern #:stream-property-list
-           #:with-dynamic-extend-usb8-array)
+           #:with-dynamic-extend-usb8-array
+           #:unix-signal)
   (:export #:if*
            #:then
            #:thenret

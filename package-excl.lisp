@@ -122,3 +122,6 @@ values otherwise."
 
 (defun excl:schedule-finalization (object fun)
   (finalize object fun))
+
+(defun excl::unix-signal (signal-number action)
+  (declare (ignore signal-number action)))
