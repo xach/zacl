@@ -202,3 +202,7 @@
 (defpackage #:top-level.debug
   (:use)
   (:export #:zoom))
+
+(defpackage #:util.string
+  (:use)
+  (:export #:string+))
