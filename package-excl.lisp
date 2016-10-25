@@ -136,8 +136,11 @@ values otherwise."
                     :start start
                     :end end))
 
-(defun excl:octets-to-string (octets &key external-format)
+(defun excl:octets-to-string (octets &key external-format
+                                       (start 0) (end (length octets)))
   (octets-to-string octets
+                    :start start
+                    :end end
                     :external-format (translate-external-format external-format)))
 
 (defun excl:schedule-finalization (object fun)
@@ -151,3 +154,4 @@ values otherwise."
   `(progn ,@body)
   #+sbcl
   `(without-package-locks ,@body))
+
