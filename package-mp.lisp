@@ -13,8 +13,8 @@
   (declare (ignorable lock-form))
   `(progn ,@body))
 
-(defun mp:make-process-lock ()
-  (cons :mp :lock))
+(defun mp:make-process-lock (&key name)
+  (cons :mp-lock name))
 
 
 ;;; Gates
@@ -36,5 +36,28 @@
 
 (defgeneric mp:process-name (process))
 
+(defgeneric mp:process-keeps-lisp-alive-p (process))
 
+(defgeneric (setf mp:process-keeps-lisp-alive-p) (new-value process))
+
+(defgeneric mp:process-property-list (process))
+
+(defgeneric (setf mp:process-property-list) (new-value process))
+
+
+;; MP:PROCESS-ADD-RUN-REASON MP:PROCESS-ALLOW-SCHEDULE MP:PROCESS-KILL MP:PROCESS-PRESET MP:PROCESS-REVOKE-RUN-REASON MP:PROCESS-RUN-FUNCTION MP:PROCESS-RUN-REASONS
+
+(defgeneric mp:process-add-run-reason (process stream))
+
+(defgeneric mp:process-allow-schedule ())
+
+(defgeneric mp:process-kill (process))
+
+(defgeneric mp:process-preset (process fun))
+
+(defgeneric mp:process-revoke-run-reason (process stream))
+
+(defgeneric mp:process-run-function (plist function))
+
+(defgeneric mp:process-run-reasons (process))
 
