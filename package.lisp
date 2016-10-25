@@ -12,6 +12,13 @@
                 #:with-output-to-sequence
                 #:string-to-octets
                 #:octets-to-string)
+  (:import-from #:usocket
+                #:socket-listen
+                #:socket-accept
+                #:get-local-address
+                #:get-local-port
+                #:socket-option
+                #:get-peer-address)
   (:import-from #:bordeaux-threads
                 #:current-thread)
   (:import-from #:trivial-garbage
