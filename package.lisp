@@ -5,6 +5,9 @@
   #+sbcl
   (:import-from #:sb-ext
                 #:without-package-locks)
+  #+ccl
+  (:import-from #:ccl
+                #:without-interrupts)
   (:import-from #:cl-ppcre
                 #:create-scanner
                 #:scan
@@ -87,9 +90,11 @@
            #:octets-to-string
            #:schedule-finalization
            #:without-package-locks
+           #:without-interrupts
            #:*initial-terminal-io*
            #:*cl-default-special-bindings*
-           #:*required-top-level-bindings*)
+           #:*required-top-level-bindings*
+           #:*current-case-mode*)
   (:export #:match-regexp
            #:match-re
            #:replace-regexp)

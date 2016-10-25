@@ -23,6 +23,8 @@
 
 (defvar excl:*required-top-level-bindings* nil)
 
+(defvar excl:*current-case-mode* :case-insensitive-upper)
+
 
 (defmacro excl:named-function (name lambda-form)
   "Return the function produced by LAMBDA-FORM wrapped in a named
@@ -154,4 +156,10 @@ values otherwise."
   `(progn ,@body)
   #+sbcl
   `(without-package-locks ,@body))
+
+(defmacro excl:without-interrupts (&body body)
+  #+ccl
+  ()
+  #-ccl
+  `(progn ,@body))
 
