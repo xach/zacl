@@ -90,7 +90,7 @@ values otherwise."
   (declare (ignore errorp))
   (error "(find-external-format ~S) -- not implemented" name))
 
-(defun fixnump (integer)
+(defun excl:fixnump (integer)
   (typep integer 'fixnum))
 
 (defun excl:split-into-words (string)
