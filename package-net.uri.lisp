@@ -33,14 +33,29 @@
 (defun net.uri:uri-scheme (uri)
   (uri-scheme (real-uri uri)))
 
+(defun (setf net.uri:uri-scheme) (new-value uri)
+  (setf (uri-scheme (real-uri uri)) new-value))
+
 (defun net.uri:uri-host (uri)
   (uri-host (real-uri uri)))
+
+(defun (setf net.uri:uri-host) (new-value uri)
+  (setf (uri-host (real-uri uri)) new-value))
 
 (defun net.uri:uri-port (uri)
   (uri-port (real-uri uri)))
 
+(defun (setf net.uri:uri-port) (new-value uri)
+  (setf (uri-port (real-uri uri)) new-value))
+
 (defun net.uri:uri-path (uri)
   (uri-path (real-uri uri)))
+
+(defun (setf net.uri:uri-path) (new-value uri)
+  (setf (uri-path (real-uri uri)) new-value))
+
+(defun (setf net.uri:uri-path) (new-value uri)
+  (setf (uri-path (real-uri uri)) new-value))
 
 (defun net.uri:uri-fragment (uri)
   (uri-fragment (real-uri uri)))
