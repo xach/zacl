@@ -57,7 +57,8 @@
 (defpackage #:zacl-cl
   (:use)
   (:export #:read-sequence
-           #:macroexpand))
+           #:macroexpand
+           #:stream-external-format))
 
 ;;; Allegro packages
 
