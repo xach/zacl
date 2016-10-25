@@ -21,11 +21,13 @@
                (:file "fake-slots")
                (:file "if-star")
                (:file "package-mp")
+               (:file "package-socket")
                (:file "package-si")
                (:file "package-excl")
                (:file "package-ff")
                (:file "package-sys")
                (:file "package-net.uri")
+               (:file "package-toplevel.debug")
                (:file "utils")
                (:file "provides")))
 
