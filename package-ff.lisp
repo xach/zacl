@@ -20,7 +20,8 @@
   (ccl::getpid))
 
 (define-known-foreign-call "fork" ()
-  (format t "; (fork) -- not implemented"))
+  (format t "; (fork) -- not implemented")
+  (random 2))
 
 (define-known-foreign-call "kill" (pid signal-number)
   (format t "; (kill ~D ~D) -- not implemented" pid signal-number))
