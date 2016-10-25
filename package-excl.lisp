@@ -145,3 +145,9 @@ values otherwise."
 
 (defun excl::unix-signal (signal-number action)
   (declare (ignore signal-number action)))
+
+(defmacro excl:without-package-locks (&body body)
+  #+ccl
+  `(progn ,@body)
+  #+sbcl
+  `(without-package-locks ,@body))

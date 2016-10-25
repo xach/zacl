@@ -2,6 +2,9 @@
 
 (defpackage #:zacl
   (:use #:cl)
+  #+sbcl
+  (:import-from #:sb-ext
+                #:without-package-locks)
   (:import-from #:cl-ppcre
                 #:create-scanner
                 #:scan
@@ -83,6 +86,7 @@
            #:string-to-octets
            #:octets-to-string
            #:schedule-finalization
+           #:without-package-locks
            #:*initial-terminal-io*
            #:*cl-default-special-bindings*
            #:*required-top-level-bindings*)
