@@ -80,6 +80,8 @@
            #:native-string-sizeof
            #:mb-to-string
            #:string-to-mb
+           #:string-to-octets
+           #:octets-to-string
            #:schedule-finalization
            #:*initial-terminal-io*
            #:*cl-default-special-bindings*

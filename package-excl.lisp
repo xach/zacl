@@ -5,6 +5,18 @@
 
 (in-package #:zacl)
 
+(defparameter *external-format-translations*
+  '((:octets . :latin1)
+    (:latin1-base . :latin1)
+    (nil . :latin1)))
+
+(defun translate-external-format (external-format)
+  (let ((entry (assoc external-format *external-format-translations*)))
+    (if entry
+        (cdr entry)
+        external-format)))
+
+
 (defvar excl:*initial-terminal-io* *terminal-io*)
 
 (defvar excl:*cl-default-special-bindings* nil)
@@ -106,19 +118,27 @@ values otherwise."
 (defun excl:native-string-sizeof (string &key (external-format :latin1))
   (length (string-to-octets string :external-format external-format)))
 
-(defun excl:string-to-mb (string &key (external-format :latin1)
-                                   mb-vector null-terminate)
+(defun excl:string-to-mb (string &key external-format mb-vector null-terminate)
   (declare (ignore mb-vector))
   (when null-terminate
     (error "Cannot null-terminate"))
-  (string-to-octets string :external-format external-format))
+  (string-to-octets string
+                    :external-format (translate-external-format external-format)))
 
-(defun excl:mb-to-string (string &key (external-format :latin1) (start 0)
+(defun excl:string-to-octets (string &key external-format)
+  (string-to-octets string
+                    :external-format (translate-external-format external-format)))
+
+(defun excl:mb-to-string (string &key external-format (start 0)
                                    (end (length string)))
   (octets-to-string string
-                    :external-format external-format
+                    :external-format (translate-external-format external-format)
                     :start start
                     :end end))
+
+(defun excl:octets-to-string (octets &key external-format)
+  (octets-to-string octets
+                    :external-format (translate-external-format external-format)))
 
 (defun excl:schedule-finalization (object fun)
   (finalize object fun))
