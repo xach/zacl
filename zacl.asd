@@ -12,6 +12,7 @@
                #:flexi-streams
                #:quri
                #:trivial-garbage
+               #:trivial-backtrace
                #:split-sequence)
   :serial t
   :components ((:file "package")

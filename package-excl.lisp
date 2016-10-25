@@ -98,3 +98,27 @@ values otherwise."
 
 (defun excl:split-on-character (string character)
   (split-sequence character string))
+
+(defmacro excl::with-dynamic-extent-usb8-array ((var len) &body body)
+  `(let ((,var (make-array ,len :element-type '(unsigned-byte 8))))
+     ,@body))
+
+(defun excl:native-string-sizeof (string &key (external-format :latin1))
+  (length (string-to-octets string :external-format external-format)))
+
+(defun excl:string-to-mb (string &key (external-format :latin1)
+                                   mb-vector null-terminate)
+  (declare (ignore mb-vector))
+  (when null-terminate
+    (error "Cannot null-terminate"))
+  (string-to-octets string :external-format external-format))
+
+(defun excl:mb-to-string (string &key (external-format :latin1) (start 0)
+                                   (end (length string)))
+  (octets-to-string string
+                    :external-format external-format
+                    :start start
+                    :end end))
+
+(defun excl:schedule-finalization (object fun)
+  (finalize object fun))

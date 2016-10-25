@@ -10,3 +10,6 @@
 
 (defun sys:defpatch (&rest args)
   (declare (ignore args)))
+
+(defun sys:command-line-arguments ()
+  (command-line-arguments))

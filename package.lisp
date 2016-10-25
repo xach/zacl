@@ -9,11 +9,18 @@
   (:import-from #:split-sequence
                 #:split-sequence)
   (:import-from #:flexi-streams
-                #:with-output-to-sequence)
+                #:with-output-to-sequence
+                #:string-to-octets
+                #:octets-to-string)
   (:import-from #:bordeaux-threads
                 #:current-thread)
   (:import-from #:trivial-garbage
-                #:make-weak-hash-table)
+                #:make-weak-hash-table
+                #:finalize)
+  (:import-from #:uiop
+                #:command-line-arguments)
+  (:import-from #:trivial-backtrace
+                #:print-backtrace-to-stream)
   (:import-from #:quri
                 #:make-uri
                 #:render-uri
@@ -49,7 +56,8 @@
 
 (defpackage #:excl
   (:use #:zacl-if-star)
-  (:intern #:stream-property-list)
+  (:intern #:stream-property-list
+           #:with-dynamic-extend-usb8-array)
   (:export #:if*
            #:then
            #:thenret
@@ -60,6 +68,10 @@
            #:fixnump
            #:split-into-words
            #:split-on-character
+           #:native-string-sizeof
+           #:mb-to-string
+           #:string-to-mb
+           #:schedule-finalization
            #:*initial-terminal-io*
            #:*cl-default-special-bindings*
            #:*required-top-level-bindings*)
