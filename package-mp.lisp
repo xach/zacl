@@ -44,9 +44,6 @@
 
 (defgeneric (setf mp:process-property-list) (new-value process))
 
-
-;; MP:PROCESS-ADD-RUN-REASON MP:PROCESS-ALLOW-SCHEDULE MP:PROCESS-KILL MP:PROCESS-PRESET MP:PROCESS-REVOKE-RUN-REASON MP:PROCESS-RUN-FUNCTION MP:PROCESS-RUN-REASONS
-
 (defgeneric mp:process-add-run-reason (process stream))
 
 (defgeneric mp:process-allow-schedule ())
@@ -61,3 +58,6 @@
 
 (defgeneric mp:process-run-reasons (process))
 
+(defgeneric mp:enqueue (queue thing))
+
+(defgeneric mp:dequeue (queue &key wait empty-queue-result whostate))

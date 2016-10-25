@@ -172,6 +172,9 @@
            #:open-gate
            #:close-gate
            #:gate-open-p)
+  (:export #:queue
+           #:enqueue
+           #:dequeue)
   (:export #:make-process-lock
            #:with-process-lock
            #:process-lock)
