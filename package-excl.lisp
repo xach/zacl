@@ -169,3 +169,17 @@ values otherwise."
   #-sbcl
   `(defvar ,name ,value ,@(if doc  (list doc))))
 
+(defclass excl:lockable-object ()
+  ((lock
+    :initarg :lock
+    :reader lock
+    :initform (make-lock))))
+
+(defun call-with-locked-object (object fun)
+  (let ((lock (lock object)))
+    (with-lock-held (lock)
+      (funcall fun))))
+
+(defmacro excl:with-locked-object ((object &key type block non-smp) &body body)
+  (declare (ignore type block non-smp))
+  `(call-with-locked-object ,object (lambda () ,@body)))

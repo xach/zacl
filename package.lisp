@@ -31,7 +31,9 @@
                 #:socket-option
                 #:get-peer-address)
   (:import-from #:bordeaux-threads
-                #:current-thread)
+                #:current-thread
+                #:make-lock
+                #:with-lock-held)
   (:import-from #:trivial-garbage
                 #:make-weak-hash-table
                 #:finalize)
@@ -101,6 +103,9 @@
            #:*cl-default-special-bindings*
            #:*required-top-level-bindings*
            #:*current-case-mode*)
+  (:export #:with-locked-object
+           #:with-locked-objects
+           #:lockable-object)
   (:export #:match-regexp
            #:match-re
            #:replace-regexp)
