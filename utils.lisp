@@ -2,14 +2,24 @@
 
 (in-package #:zacl)
 
-(defun aload (file)
+(defparameter *build-time-features*
+  '(:smp :smp-macros))
+
+(defun call-with-zacl-build-environment (fun)
   (let ((*readtable* zacl-reader:*allegro-rewriting-readtable*)
-        (*package* (find-package :user)))
+        (*package* (find-package :user))
+        (*features* (append *build-time-features* *features*)))
+    (funcall fun)))
+
+(defmacro with-zacl-build-environment (&body body)
+  `(call-with-zacl-build-environment (lambda () ,@body)))
+
+(defun aload (file)
+  (with-zacl-build-environment
     (load file)))
 
 (defun acompile (file)
-  (let ((*readtable* zacl-reader:*allegro-rewriting-readtable*)
-        (*package* (find-package :user)))
+  (with-zacl-build-environment
     (compile-file file)))
 
 (defun acl (file)
