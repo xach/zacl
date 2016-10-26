@@ -13,7 +13,8 @@
                #:quri
                #:trivial-garbage
                #:trivial-backtrace
-               #:split-sequence)
+               #:split-sequence
+               #:queues.simple-cqueue)q
   :serial t
   :components ((:file "package")
                (:file "defpackage-hack")

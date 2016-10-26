@@ -34,6 +34,10 @@
                 #:current-thread
                 #:make-lock
                 #:with-lock-held)
+  (:import-from #:queues
+                #:make-queue
+                #:qpush
+                #:qpop)
   (:import-from #:trivial-garbage
                 #:make-weak-hash-table
                 #:finalize)

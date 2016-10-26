@@ -61,6 +61,22 @@
 
 (defgeneric mp:process-run-reasons (process))
 
-(defgeneric mp:enqueue (queue thing))
 
-(defgeneric mp:dequeue (queue &key wait empty-queue-result whostate))
+;;; Queues
+
+;; FIXME: Timeouts.
+
+(defclass mp:queue ()
+  ((queue
+    :initarg :queue
+    :accessor queue
+    :initform (make-queue :simple-cqueue))))
+
+(defgeneric mp:enqueue (queue thing)
+  (:method (queue thing)
+    (qpush (queue queue) thing)))
+
+(defgeneric mp:dequeue (queue &key wait empty-queue-result whostate)
+  (:method (queue &key wait empty-queue-result whostate)
+    (declare (ignore whostate wait))
+    (qpop (queue queue) empty-queue-result)))
