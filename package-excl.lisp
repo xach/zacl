@@ -183,3 +183,31 @@ values otherwise."
 (defmacro excl:with-locked-object ((object &key type block non-smp) &body body)
   (declare (ignore type block non-smp))
   `(call-with-locked-object ,object (lambda () ,@body)))
+
+(defstruct excl:synchronizing-structure
+  (lock (make-lock)))
+
+(defun call-with-locked-structure (struct fun)
+  (with-lock-held ((synchronizing-structure-lock struct))
+    (funcall fun)))
+
+(defmacro excl:with-locked-structure ((struct) &body body)
+  `(call-with-locked-structure ,struct (lambda () ,@body)))
+
+(defmacro excl:incf-atomic (place &optional (delta 1))
+  #+ccl
+  ;; Doesn't work on structure slots on CCL!
+  ;;`(atomic-incf-decf ,place ,delta)
+  `(incf ,place ,delta)
+  ;; XXX
+  #-ccl
+  `(incf ,place ,delta))
+
+(defmacro excl:decf-atomic (place &optional (delta 1))
+  #+ccl
+  ;; Doesn't work on structure slots on CCL!
+  ;;`(atomic-incf-decf ,place (- ,delta))
+  `(decf ,place (- ,delta))
+  ;; XXX
+  #-ccl
+  `(decf ,place (- ,delta)))

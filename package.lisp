@@ -13,6 +13,10 @@
   #+ccl
   (:import-from #:ccl
                 #:without-interrupts)
+  #+ccl
+  (:import-from #:ccl
+                ;; XXX private
+                #:atomic-incf-decf)
   (:import-from #:cl-ppcre
                 #:create-scanner
                 #:scan
@@ -88,7 +92,11 @@
            #:then
            #:thenret
            #:else)
-  (:export #:named-function
+  (:export #:synchronizing-structure
+           #:with-locked-structure
+           #:incf-atomic
+           #:decf-atomic
+           #:named-function
            #:featurep
            #:find-external-format
            #:fixnump
