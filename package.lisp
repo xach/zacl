@@ -4,7 +4,12 @@
   (:use #:cl)
   #+sbcl
   (:import-from #:sb-ext
-                #:without-package-locks)
+                #:without-package-locks
+                #:defglobal)
+  #+sbcl
+  (:import-from #:sb-sys
+                ;; XXX Private package
+                #:without-interrupts)
   #+ccl
   (:import-from #:ccl
                 #:without-interrupts)
@@ -91,6 +96,7 @@
            #:schedule-finalization
            #:without-package-locks
            #:without-interrupts
+           #:defvar-nonbindable
            #:*initial-terminal-io*
            #:*cl-default-special-bindings*
            #:*required-top-level-bindings*

@@ -152,14 +152,20 @@ values otherwise."
   (declare (ignore signal-number action)))
 
 (defmacro excl:without-package-locks (&body body)
-  #+ccl
+  #-sbcl
   `(progn ,@body)
   #+sbcl
   `(without-package-locks ,@body))
 
 (defmacro excl:without-interrupts (&body body)
-  #+ccl
-  ()
-  #-ccl
+  #+(or ccl sbcl)
+  `(without-interrupts ,@body)
+  #-(or ccl sbcl)
   `(progn ,@body))
+
+(defmacro excl:defvar-nonbindable (name value &optional doc)
+  #+sbcl
+  `(defglobal ,name ,value ,@(if doc (list doc)))
+  #-sbcl
+  `(defvar ,name ,value ,@(if doc  (list doc))))
 
