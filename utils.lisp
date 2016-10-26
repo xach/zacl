@@ -15,10 +15,12 @@
   `(call-with-zacl-build-environment (lambda () ,@body)))
 
 (defun aload (file)
+  (setf file (merge-pathnames file "file.cl"))
   (with-zacl-build-environment
     (load file)))
 
 (defun acompile (file)
+  (setf file (merge-pathnames file "file.cl"))
   (with-zacl-build-environment
     (compile-file file)))
 
