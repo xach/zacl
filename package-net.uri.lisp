@@ -18,8 +18,8 @@
 (defun net.uri:copy-uri (uri &key scheme host)
   (copy-uri (real-uri uri) :scheme scheme :host host))
 
-(defun net.uri:render-uri (uri)
-  (render-uri (real-uri uri)))
+(defun net.uri:render-uri (uri &optional stream)
+  (render-uri (real-uri uri) stream))
 
 (defun net.uri:merge-uris (new-uri uri)
   (merge-uris (real-uri new-uri) (real-uri uri)))
