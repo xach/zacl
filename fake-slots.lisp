@@ -34,10 +34,11 @@
 
 (defmacro def-fake-slot (slot-name class-name
                          &key accessor (default-value nil default-value-p))
-  (ensure-fake-slot-table slot-name class-name)
   (unless accessor
     (setf accessor slot-name))
   `(progn
+     (eval-when (:compile-toplevel :load-toplevel :execute)
+       (ensure-fake-slot-table ',slot-name ',class-name))
      (defgeneric ,accessor (,class-name)
        (:method ((object ,class-name))
          (let ((table (fake-slot-table ',slot-name ',class-name)))
