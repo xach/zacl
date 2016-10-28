@@ -33,6 +33,8 @@
 
 ;;; Processes
 
+(defclass mp:process-lock (excl:lockable-object) ())
+
 (defgeneric mp:make-process (&key name initial-bindings))
 
 (defgeneric mp:process-thread (process))
@@ -57,7 +59,7 @@
 
 (defgeneric mp:process-revoke-run-reason (process stream))
 
-(defgeneric mp:process-run-function (plist function))
+(defgeneric mp:process-run-function (plist function &rest arguments))
 
 (defgeneric mp:process-run-reasons (process))
 

@@ -212,3 +212,9 @@ values otherwise."
   ;; XXX
   #-ccl
   `(decf ,place (- ,delta)))
+
+(defstruct (basic-lock (:include excl:synchronizing-structure))
+  name)
+
+(defun excl::make-basic-lock (&key name)
+  (make-basic-lock :name name))

@@ -30,6 +30,7 @@
   (:import-from #:usocket
                 #:socket-listen
                 #:socket-accept
+                #:socket-connect
                 #:get-local-address
                 #:get-local-port
                 #:socket-option
@@ -87,7 +88,8 @@
   (:use #:zacl-if-star)
   (:intern #:stream-property-list
            #:with-dynamic-extend-usb8-array
-           #:unix-signal)
+           #:unix-signal
+           #:make-basic-lock)
   (:export #:if*
            #:then
            #:thenret

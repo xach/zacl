@@ -29,6 +29,7 @@
                (:file "package-ff")
                (:file "package-net.uri")
                (:file "package-toplevel.debug")
+               (:file "package-util.zip")
                (:file "utils")
                (:file "provides")))
 

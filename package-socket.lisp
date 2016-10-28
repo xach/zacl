@@ -21,13 +21,16 @@
 
 
 (defun socket:make-socket (&key connect local-port local-host reuse-address
-                             format (backlog 5) type)
+                             remote-port remote-host
+                             format (backlog 5) type nodelay)
   (declare (ignore format type))
   (ecase connect
     (:passive
      (socket-listen local-host local-port
                     :reuseaddress reuse-address
-                    :backlog backlog))))
+                    :backlog backlog))
+    ((nil)
+     (socket-connect remote-host remote-port :nodelay nodelay))))
 
 (defun socket:accept-connection (socket)
   (socket-accept socket))
