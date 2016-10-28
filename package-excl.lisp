@@ -191,7 +191,8 @@ values otherwise."
   (with-lock-held ((synchronizing-structure-lock struct))
     (funcall fun)))
 
-(defmacro excl:with-locked-structure ((struct) &body body)
+(defmacro excl:with-locked-structure ((struct &key block non-smp) &body body)
+  (declare (ignore block non-smp))
   `(call-with-locked-structure ,struct (lambda () ,@body)))
 
 (defmacro excl:incf-atomic (place &optional (delta 1))
