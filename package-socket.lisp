@@ -3,7 +3,7 @@
 (in-package #:zacl)
 
 (defun ip-address-integer (ip-address)
-  (check-type ip-address (simple-array (unsigned-byte 8) (4)) "octet vector")
+  (check-type ip-address (simple-array * (4)) "octet vector")
   (logand #xFFFFFFFF
           (logior (ash (aref ip-address 0) 24)
                   (ash (aref ip-address 1) 16)

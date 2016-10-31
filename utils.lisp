@@ -2,6 +2,24 @@
 
 (in-package #:zacl)
 
+(defparameter *aserve-files*
+  '("htmlgen/htmlgen"
+      "packages"
+      "macs"
+      "queue"
+      "main"
+      "headers"
+      "parse"
+      "decode"
+      "publish"
+      "authorize"
+      "log"
+      "client"
+      "proxy"
+      "cgi"
+      "chunker")
+  "Source files of aserve, taken from aserve/load.cl")
+
 (defparameter *build-time-features*
   '(:smp :smp-macros))
 
@@ -27,3 +45,24 @@
 (defun acl (file)
   (aload (acompile file)))
 
+
+;;; Incremental retrying of stuff. Global state galore.
+
+(defvar *to-build* *aserve-files*)
+(defvar *source-directory* (merge-pathnames "src/aserve/"
+                                            (user-homedir-pathname)))
+
+(defun reset ()
+  (setf *to-build* *aserve-files*))
+
+(defun try ()
+  (unless *to-build*
+    (error "Nothing left to build -- (reset) to start over"))
+  (let ((*default-pathname-defaults* *source-directory*))
+    (loop
+      (when (endp *to-build*)
+        (return))
+      (let ((file (first *to-build*)))
+        (let ((fasl (acompile file)))
+          (aload fasl)
+          (pop *to-build*))))))

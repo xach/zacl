@@ -12,7 +12,18 @@
                 #:without-interrupts)
   #+ccl
   (:import-from #:ccl
-                #:without-interrupts)
+                #:without-interrupts
+                #:make-process
+                #:process
+                #:process-kill
+                #:*current-process*
+                #:process-run-function
+                #:process-name
+                #:process-enable
+                #:process-preset
+                ;; XXX private
+                #:process-yield
+                )
   #+ccl
   (:import-from #:ccl
                 ;; XXX private
@@ -36,6 +47,7 @@
                 #:socket-option
                 #:get-peer-address)
   (:import-from #:bordeaux-threads
+                #:make-thread
                 #:current-thread
                 #:make-lock
                 #:with-lock-held)

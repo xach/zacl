@@ -33,33 +33,64 @@
 
 ;;; Processes
 
+(defclass zacl-process (process)
+  ((run-reasons
+    :initform nil
+    :reader mp:process-run-reasons
+    :reader process-run-reasons
+    ;; private to zacl
+    :writer (setf process-run-reasons))
+   (property-list
+    :initform nil
+    :accessor mp:process-property-list)))
+
 (defclass mp:process-lock (excl:lockable-object) ())
 
-(defgeneric mp:make-process (&key name initial-bindings))
+(defgeneric mp:make-process (&key name initial-bindings)
+  (:method (&key name initial-bindings)
+    (make-process name :class 'zacl-process
+                  :initial-bindings initial-bindings)))
 
 (defgeneric mp:process-thread (process))
 
-(defgeneric mp:process-name (process))
+(defgeneric mp:process-name (process)
+  (:method (process)
+    (process-name process)))
 
 (defgeneric mp:process-keeps-lisp-alive-p (process))
 
 (defgeneric (setf mp:process-keeps-lisp-alive-p) (new-value process))
 
-(defgeneric mp:process-property-list (process))
+(def-fake-slot mp:process-keeps-lisp-alive-p process :default-value nil)
 
-(defgeneric (setf mp:process-property-list) (new-value process))
+(defgeneric mp:process-add-run-reason (process object)
+  (:method (process object)
+    ;; XXX Needs to start process running
+    (push object (process-run-reasons process))))
 
-(defgeneric mp:process-add-run-reason (process stream))
+(defgeneric mp:process-allow-schedule ()
+  (:method ()
+    (process-yield *current-process*)))
 
-(defgeneric mp:process-allow-schedule ())
+(defgeneric mp:process-kill (process)
+  (:method (process)
+    (process-kill process)))
 
-(defgeneric mp:process-kill (process))
+(defgeneric mp:process-preset (process fun)
+  (:method (process fun)
+    (process-preset process fun)))
 
-(defgeneric mp:process-preset (process fun))
+(defgeneric mp:process-revoke-run-reason (process object)
+  (:method (process object)
+    ;; XXX Needs to stop process if no more run reasons left
+    (setf (process-run-reasons process)
+          (delete object (process-run-reasons process)))))
 
-(defgeneric mp:process-revoke-run-reason (process stream))
-
-(defgeneric mp:process-run-function (plist function &rest arguments))
+(defgeneric mp:process-run-function (name-or-plist function &rest arguments)
+  (:method ((name string) function &rest arguments)
+    (apply #'mp:process-run-function (list :name name) function arguments))
+  (:method ((plist list) function &rest arguments)
+    (apply #'process-run-function plist function arguments)))
 
 (defgeneric mp:process-run-reasons (process))
 
