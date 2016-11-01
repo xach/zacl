@@ -40,6 +40,9 @@
     :reader process-run-reasons
     ;; private to zacl
     :writer (setf process-run-reasons))
+   (run-reasons-lock
+    :initform (make-lock)
+    :reader run-reasons-lock)
    (property-list
     :initform nil
     :accessor mp:process-property-list)))
@@ -65,8 +68,15 @@
 
 (defgeneric mp:process-add-run-reason (process object)
   (:method (process object)
-    ;; XXX Needs to start process running
-    (push object (process-run-reasons process))))
+    (with-lock-held ((run-reasons-lock process))
+      (push object (process-run-reasons process)))
+    (process-enable process)))
+
+(defgeneric mp:process-revoke-run-reason (process object)
+  (:method (process object)
+    (with-lock-held ((run-reasons-lock process))
+      (setf (process-run-reasons process)
+            (delete object (process-run-reasons process))))))
 
 (defgeneric mp:process-allow-schedule ()
   (:method ()
@@ -76,23 +86,20 @@
   (:method (process)
     (process-kill process)))
 
-(defgeneric mp:process-preset (process fun)
-  (:method (process fun)
-    (process-preset process fun)))
-
-(defgeneric mp:process-revoke-run-reason (process object)
-  (:method (process object)
-    ;; XXX Needs to stop process if no more run reasons left
-    (setf (process-run-reasons process)
-          (delete object (process-run-reasons process)))))
+(defgeneric mp:process-preset (process fun &rest args)
+  (:method (process fun &rest args)
+    (apply #'process-preset process fun args )))
 
 (defgeneric mp:process-run-function (name-or-plist function &rest arguments)
   (:method ((name string) function &rest arguments)
     (apply #'mp:process-run-function (list :name name) function arguments))
   (:method ((plist list) function &rest arguments)
-    (apply #'process-run-function plist function arguments)))
+    (apply #'process-run-function (list* :class 'zacl-process plist)
+           function arguments)))
 
-(defgeneric mp:process-run-reasons (process))
+(defgeneric mp:process-run-reasons (process)
+  (:method (process)
+    (process-run-reasons process)))
 
 
 ;;; Queues

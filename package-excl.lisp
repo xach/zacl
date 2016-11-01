@@ -127,7 +127,9 @@ values otherwise."
   (string-to-octets string
                     :external-format (translate-external-format external-format)))
 
-(defun excl:string-to-octets (string &key external-format)
+(defun excl:string-to-octets (string &key external-format null-terminate)
+  (when null-terminate
+    (error "No null terminating!"))
   (string-to-octets string
                     :external-format (translate-external-format external-format)))
 
@@ -220,3 +222,8 @@ values otherwise."
 
 (defun excl::make-basic-lock (&key name)
   (make-basic-lock :name name))
+
+(define-condition excl:socket-error (error)
+  ((identifier
+    :initarg :identifier
+    :reader excl:stream-error-identifier)))

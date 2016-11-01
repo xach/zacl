@@ -46,7 +46,9 @@
                 #:get-local-port
                 #:socket-option
                 #:get-peer-address
-                #:usocket-p)
+                #:usocket-p
+                #:usocket
+                #:socket-stream)
   (:import-from #:bordeaux-threads
                 #:make-thread
                 #:current-thread
@@ -94,7 +96,9 @@
   (:export #:read-sequence
            #:macroexpand
            #:stream-external-format
-           #:streamp))
+           #:streamp
+           #:read-char
+           #:read-char-no-hang))
 
 ;;; Allegro packages
 
@@ -109,6 +113,7 @@
            #:thenret
            #:else)
   (:export #:synchronizing-structure
+           #:socket-error
            #:with-locked-structure
            #:incf-atomic
            #:decf-atomic
@@ -156,6 +161,7 @@
 (defpackage #:socket
   (:use)
   (:export #:make-socket
+           #:socket-error
            #:accept-connection
            #:socket-control
            #:local-port

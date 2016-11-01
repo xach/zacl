@@ -9,7 +9,7 @@
                                #:macroexpand
                                #:read-sequence
                                #:streamp
-                               #:stream-external-format)
+                               #:read-char)
        ,@clauses)))
 
 (defun zacl-cl:read-sequence (sequence stream &key start end partial-fill)
@@ -31,3 +31,10 @@
 (defun zacl-cl:streamp (object)
   (or (streamp object)
       (usocket-p object)))
+
+(defgeneric zacl-cl:read-char (stream &optional eof-error-p eof-value)
+  (:method ((stream usocket) &optional (eof-error-p t) eof-value)
+    (read-char (socket-stream stream) eof-error-p eof-value))
+  (:method ((stream stream) &optional (eof-error-p t) eof-value)
+    (read-char stream eof-error-p eof-value)))
+

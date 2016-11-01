@@ -21,13 +21,13 @@
     (unless class-table
       (setf class-table
             (setf (gethash class-name *fake-slots-table*)
-                  (make-hash-table)))
-      (let ((slot-table (gethash slot-name class-table)))
-        (unless slot-table
-          (setf slot-table
-                (setf (gethash slot-name class-table)
-                      (make-weak-hash-table))))
-        slot-table))))
+                  (make-hash-table))))
+    (let ((slot-table (gethash slot-name class-table)))
+      (unless slot-table
+        (setf slot-table
+              (setf (gethash slot-name class-table)
+                    (make-weak-hash-table))))
+      slot-table)))
 
 (defun fake-slot-table (slot-name class-name)
   (gethash slot-name (gethash class-name *fake-slots-table*)))
