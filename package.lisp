@@ -45,7 +45,8 @@
                 #:get-local-address
                 #:get-local-port
                 #:socket-option
-                #:get-peer-address)
+                #:get-peer-address
+                #:usocket-p)
   (:import-from #:bordeaux-threads
                 #:make-thread
                 #:current-thread
@@ -92,7 +93,8 @@
   (:use)
   (:export #:read-sequence
            #:macroexpand
-           #:stream-external-format))
+           #:stream-external-format
+           #:streamp))
 
 ;;; Allegro packages
 

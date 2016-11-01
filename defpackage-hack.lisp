@@ -8,6 +8,7 @@
        (:shadowing-import-from #:zacl-cl
                                #:macroexpand
                                #:read-sequence
+                               #:streamp
                                #:stream-external-format)
        ,@clauses)))
 
@@ -26,3 +27,7 @@
   (declare (ignore stream))
   ;; FIXME
   new-value)
+
+(defun zacl-cl:streamp (object)
+  (or (streamp object)
+      (usocket-p object)))
