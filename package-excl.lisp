@@ -146,7 +146,9 @@ values otherwise."
                     :external-format (translate-external-format external-format)))
 
 (defun excl:schedule-finalization (object fun)
-  (finalize object fun))
+  ;; Doesn't work; semantics differ.
+  ;; (finalize object fun))
+  (declare (ignore object fun)))
 
 (defun excl::unix-signal (signal-number action)
   (declare (ignore signal-number action)))
