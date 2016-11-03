@@ -9,7 +9,8 @@
                                #:macroexpand
                                #:read-sequence
                                #:streamp
-                               #:read-char)
+                               #:read-char
+                               #:stream-external-format)
        ,@clauses)))
 
 (defun zacl-cl:read-sequence (sequence stream &key start end partial-fill)
@@ -20,13 +21,15 @@
   (declare (ignore stop-on-special-forms-p))
   (macroexpand form env))
 
-(defun zacl-cl:stream-external-format (stream)
-  (stream-external-format stream))
+(defgeneric zacl-cl:stream-external-format (stream)
+  (:method (stream)
+    (stream-external-format stream)))
 
-(defun (setf zacl-cl:stream-external-format) (new-value stream)
-  (declare (ignore stream))
-  ;; FIXME
-  new-value)
+(defgeneric (setf zacl-cl:stream-external-format) (new-value stream)
+  (:method (new-value stream)
+    (declare (ignore stream))
+    ;; FIXME
+    new-value))
 
 (defun zacl-cl:streamp (object)
   (or (streamp object)
