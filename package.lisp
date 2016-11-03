@@ -58,6 +58,17 @@
                 #:make-queue
                 #:qpush
                 #:qpop)
+  (:import-from #:trivial-gray-streams
+                #:fundamental-stream
+                #:fundamental-binary-output-stream
+                #:fundamental-binary-input-stream
+                #:fundamental-character-output-stream
+                #:fundamental-character-input-stream
+                #:stream-read-char
+                #:stream-write-char
+                #:stream-write-string
+                #:stream-read-byte
+                #:stream-read-byte)
   (:import-from #:trivial-garbage
                 #:make-weak-hash-table
                 #:finalize)
@@ -107,12 +118,22 @@
   (:intern #:stream-property-list
            #:with-dynamic-extend-usb8-array
            #:unix-signal
-           #:make-basic-lock)
+           #:make-basic-lock
+           #:*std-control-out-table*)
   (:export #:if*
            #:then
            #:thenret
            #:else)
-  (:export #:synchronizing-structure
+  (:export #:single-channel-simple-stream
+           #:device-open
+           #:device-close
+           #:device-read
+           #:device-write
+           #:add-stream-instance-flags
+           #:write-vector
+           #:crlf-base-ef
+           #:ef-name
+           #:synchronizing-structure
            #:socket-error
            #:with-locked-structure
            #:incf-atomic

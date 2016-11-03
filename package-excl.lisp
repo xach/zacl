@@ -102,7 +102,14 @@ values otherwise."
 
 (defun excl:find-external-format (name &key errorp)
   (declare (ignore errorp))
-  (error "(find-external-format ~S) -- not implemented" name))
+  (declare (ignore name))
+  :latin-1)
+
+(defun excl:crlf-base-ef (external-format)
+  external-format)
+
+(defun excl:ef-name (external-format)
+  external-format)
 
 (defun excl:fixnump (integer)
   (typep integer 'fixnum))
@@ -227,3 +234,48 @@ values otherwise."
   ((identifier
     :initarg :identifier
     :reader excl:stream-error-identifier)))
+
+
+;;; Streams
+
+(defgeneric excl:device-open (stream slot-names initargs))
+(defgeneric excl:device-close (stream abort))
+(defgeneric excl:device-read (stream buffer start end blocking))
+(defgeneric excl:device-write (stream buffer start end blocking))
+
+(defvar excl::*std-control-out-table* nil)
+
+(defclass excl:single-channel-simple-stream (fundamental-stream)
+  ((excl::buffer
+    :initform (make-array 1024 :element-type '(unsigned-byte 8)))
+   (excl::output-handle)
+   (excl::buffer-ptr)
+   (excl::control-out)
+   (external-format
+    :initarg :external-format
+    :initform :default
+    :accessor zacl-cl:stream-external-format)))
+
+(defmethod shared-initialize :after ((stream
+                                      excl:single-channel-simple-stream)
+                                     slot-names
+                                     &rest initargs &key &allow-other-keys)
+  (excl:device-open stream slot-names initargs))
+
+(defmethod stream-write-string ((stream excl:single-channel-simple-stream) string &optional start end )
+  (unless start (setf start 0))
+  (unless end (setf end (length string)))
+  (write-string string (socket-stream (slot-value stream 'excl::output-handle))
+                :start start
+                :end end))
+
+(defmacro excl:add-stream-instance-flags (stream &rest flags)
+  (declare (ignore stream flags))
+  nil)
+
+(defun excl:write-vector (vector stream &key (start 0) (end (length vector)))
+  ;; The real write-vector has more complicated blocking
+  ;; behavior. Save that for later.
+  (write-sequence vector stream :start start :end end)
+  end)
+

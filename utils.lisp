@@ -21,7 +21,7 @@
   "Source files of aserve, taken from aserve/load.cl")
 
 (defparameter *build-time-features*
-  '(:smp :smp-macros))
+  '(:smp :smp-macros :allegro))
 
 (defun call-with-zacl-build-environment (fun)
   (let ((*readtable* zacl-reader:*allegro-rewriting-readtable*)
