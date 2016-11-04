@@ -262,12 +262,50 @@ values otherwise."
                                      &rest initargs &key &allow-other-keys)
   (excl:device-open stream slot-names initargs))
 
+(defgeneric underlying-output-stream (stream)
+  (:method ((stream excl:single-channel-simple-stream))
+    (underlying-output-stream (slot-value stream 'excl::output-handle)))
+  (:method ((stream stream-usocket))
+    (socket-stream stream))
+  (:method ((stream usocket))
+    (socket-stream stream))
+  (:method ((stream stream))
+    stream))
+
+(defgeneric underlying-input-stream (stream)
+  (:method ((stream excl:single-channel-simple-stream))
+    (underlying-input-stream (slot-value stream 'excl::input-handle)))
+  (:method ((stream usocket))
+    (socket-stream stream))
+  (:method ((stream stream))
+    stream))
+
 (defmethod stream-write-string ((stream excl:single-channel-simple-stream) string &optional start end )
   (unless start (setf start 0))
   (unless end (setf end (length string)))
-  (write-string string (socket-stream (slot-value stream 'excl::output-handle))
+  (write-string string (underlying-output-stream stream)
                 :start start
                 :end end))
+
+(defmethod ccl:stream-write-vector ((stream excl:single-channel-simple-stream) sequence start end)
+  (unless start (setf start 0))
+  (unless end (setf end (length sequence)))
+  (write-sequence sequence (underlying-output-stream stream)))
+
+(defmethod stream-force-output ((stream excl:single-channel-simple-stream))
+  (force-output (underlying-output-stream stream)))
+
+(defmethod stream-force-output ((stream usocket))
+  (force-output (underlying-output-stream stream)))
+
+(defmethod stream-read-char ((stream usocket))
+  (stream-read-char (socket-stream stream)))
+
+(defmethod stream-read-byte ((stream usocket))
+  (stream-read-byte (socket-stream stream)))
+
+(defmethod cl:close ((stream usocket) &key abort)
+  (close (socket-stream stream) :abort abort))
 
 (defmacro excl:add-stream-instance-flags (stream &rest flags)
   (declare (ignore stream flags))
@@ -279,3 +317,13 @@ values otherwise."
   (write-sequence vector stream :start start :end end)
   end)
 
+(defmethod excl::socket-bytes-written (socket &optional set)
+  (declare (ignore socket))
+  (or set
+      42))
+
+(defmacro excl:pop-atomic (place)
+  `(pop ,place))
+
+(defmacro excl:push-atomic (value place)
+  `(push ,value ,place ))

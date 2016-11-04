@@ -12,6 +12,9 @@
   (:default-initargs
    :plist nil))
 
+(defmethod real-uri ((uri quri:uri))
+  uri)
+
 (defun net.uri:uri-path (uri)
   (uri-path (real-uri uri)))
 

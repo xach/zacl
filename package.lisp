@@ -48,6 +48,7 @@
                 #:get-peer-address
                 #:usocket-p
                 #:usocket
+                #:stream-usocket
                 #:socket-stream)
   (:import-from #:bordeaux-threads
                 #:make-thread
@@ -67,8 +68,10 @@
                 #:stream-read-char
                 #:stream-write-char
                 #:stream-write-string
+                #:stream-write-sequence
                 #:stream-read-byte
-                #:stream-read-byte)
+                #:stream-read-byte
+                #:stream-force-output)
   (:import-from #:trivial-garbage
                 #:make-weak-hash-table
                 #:finalize)
@@ -119,12 +122,15 @@
            #:with-dynamic-extend-usb8-array
            #:unix-signal
            #:make-basic-lock
-           #:*std-control-out-table*)
+           #:*std-control-out-table*
+           #:socket-bytes-written)
   (:export #:if*
            #:then
            #:thenret
            #:else)
-  (:export #:single-channel-simple-stream
+  (:export #:pop-atomic
+           #:push-atomic
+           #:single-channel-simple-stream
            #:device-open
            #:device-close
            #:device-read
