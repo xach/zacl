@@ -21,7 +21,10 @@
                 #:process-name
                 #:process-enable
                 #:process-preset
+                #:defstaticvar
+                #:symbol-value-in-process
                 ;; XXX private
+                #:*initial-process*
                 #:process-yield
                 )
   #+ccl

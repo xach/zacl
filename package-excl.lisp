@@ -177,7 +177,9 @@ values otherwise."
 (defmacro excl:defvar-nonbindable (name value &optional doc)
   #+sbcl
   `(defglobal ,name ,value ,@(if doc (list doc)))
-  #-sbcl
+  #+ccl
+  `(defstaticvar ,name ,value ,@(if doc (list doc)) )
+  #-(or ccl sbcl)
   `(defvar ,name ,value ,@(if doc  (list doc))))
 
 (defclass excl:lockable-object ()
