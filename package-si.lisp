@@ -12,6 +12,8 @@
   (symbol-value symbol))
 
 (defun (setf si:global-symbol-value) (new-value symbol)
+  ;;; FIXME: ccl::*initial-process* is internal - see if there's a
+  ;;; better way
   #+ccl
   (setf (symbol-value-in-process symbol *initial-process*) new-value)
   #-ccl
