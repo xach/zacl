@@ -148,7 +148,10 @@ values otherwise."
                     :end end))
 
 (defun excl:octets-to-string (octets &key external-format
+                                       string string-start string-end truncate
                                        (start 0) (end (length octets)))
+  (when (or string string-start string-end truncate)
+    (error "Unsupported options given to excl:octets-to-string"))
   (octets-to-string octets
                     :start start
                     :end end
