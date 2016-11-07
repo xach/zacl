@@ -253,7 +253,10 @@ values otherwise."
 (defclass excl:single-channel-simple-stream (fundamental-stream)
   ((excl::buffer
     :initform (make-array 1024 :element-type '(unsigned-byte 8)))
-   (excl::output-handle)
+   (excl::output-handle
+    :initarg :output-handle)
+   (excl::input-handle
+    :initarg :input-handle)
    (excl::buffer-ptr)
    (excl::control-out)
    (external-format
