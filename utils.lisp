@@ -57,7 +57,8 @@
 
 (defun try ()
   (unless *to-build*
-    (error "Nothing left to build -- (reset) to start over"))
+    (cerror "Call reset" "Nothing left to build -- (reset) to start over")
+    (reset))
   (let ((*default-pathname-defaults* *source-directory*))
     (loop
       (when (endp *to-build*)
