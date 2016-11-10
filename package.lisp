@@ -70,6 +70,7 @@
                 #:fundamental-character-input-stream
                 #:stream-read-char
                 #:stream-write-char
+                #:stream-write-byte
                 #:stream-write-string
                 #:stream-write-sequence
                 #:stream-read-byte
@@ -134,6 +135,7 @@
   (:export #:pop-atomic
            #:push-atomic
            #:single-channel-simple-stream
+           #:install-single-channel-character-strategy
            #:device-open
            #:device-close
            #:device-read

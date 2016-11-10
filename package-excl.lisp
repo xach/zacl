@@ -247,10 +247,26 @@ values otherwise."
 (defgeneric excl:device-close (stream abort))
 (defgeneric excl:device-read (stream buffer start end blocking))
 (defgeneric excl:device-write (stream buffer start end blocking))
+(defgeneric excl:install-single-channel-character-strategy (stream format &optional default)
+  (:method (stream format &optional default)
+    (declare (ignore stream format default))))
 
 (defvar excl::*std-control-out-table* nil)
 
-(defclass excl:single-channel-simple-stream (fundamental-stream)
+(defclass zacl-simple-stream (fundamental-binary-output-stream
+                              fundamental-binary-input-stream)
+  ())
+
+(defmethod stream-write-char ((stream zacl-simple-stream) char)
+  (let ((buffer (string-to-octets (string char))))
+    (excl:device-write stream buffer 0 (length buffer) nil)))
+
+(defmethod stream-write-byte ((stream zacl-simple-stream) byte)
+  (let ((buffer (make-array 1 :element-type '(unsigned-byte 8)
+                            :initial-element byte)))
+    (excl:device-write stream buffer 0 1 nil)))
+
+(defclass excl:single-channel-simple-stream (zacl-simple-stream)
   ((excl::buffer
     :initform (make-array 1024 :element-type '(unsigned-byte 8)))
    (excl::output-handle
@@ -259,6 +275,7 @@ values otherwise."
     :initarg :input-handle)
    (excl::buffer-ptr)
    (excl::control-out)
+   (excl::oc-state)
    (external-format
     :initarg :external-format
     :initform :default
@@ -269,6 +286,11 @@ values otherwise."
                                      slot-names
                                      &rest initargs &key &allow-other-keys)
   (excl:device-open stream slot-names initargs))
+
+(defmethod close ((stream excl:single-channel-simple-stream) &key abort)
+  (excl:device-close stream abort))
+
+
 
 (defgeneric underlying-output-stream (stream)
   (:method ((stream excl:single-channel-simple-stream))
@@ -288,12 +310,11 @@ values otherwise."
   (:method ((stream stream))
     stream))
 
-(defmethod stream-write-string ((stream excl:single-channel-simple-stream) string &optional start end )
+(defmethod stream-write-string ((stream excl:single-channel-simple-stream) string &optional start end)
   (unless start (setf start 0))
   (unless end (setf end (length string)))
-  (write-string string (underlying-output-stream stream)
-                :start start
-                :end end))
+  (let ((buffer (string-to-octets string :start start :end end)))
+    (excl:device-write stream buffer 0 (length buffer) nil)))
 
 (defmethod ccl:stream-write-vector ((stream excl:single-channel-simple-stream) sequence start end)
   (unless start (setf start 0))
@@ -322,6 +343,8 @@ values otherwise."
 (defun excl:write-vector (vector stream &key (start 0) (end (length vector)))
   ;; The real write-vector has more complicated blocking
   ;; behavior. Save that for later.
+  (when (stringp vector)
+    (setf vector (string-to-octets vector :start start :end end)))
   (write-sequence vector stream :start start :end end)
   end)
 
