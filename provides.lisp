@@ -10,3 +10,5 @@
 (provide :sock)
 (provide :process)
 (provide :acldns)
+
+(pushnew :zacl *features*)
