@@ -15,8 +15,42 @@
 (defmethod real-uri ((uri quri:uri))
   uri)
 
-(defun net.uri:uri-path (uri)
-  (uri-path (real-uri uri)))
+(defmethod print-object ((uri net.uri:uri)  stream)
+  (print-unreadable-object (uri stream :type t)
+    (format stream "~S" (render-uri (real-uri uri)))))
+
+(defun net.uri:parse-uri (uri-string)
+  (make-instance 'net.uri:uri :real-uri (uri uri-string)))
+
+(macrolet ((net-uri-accessors (&rest names)
+             `(progn
+                ,@(mapcan (lambda (name)
+                            (let ((net-name (find-symbol (symbol-name name)
+                                                         :net.uri)))
+                              (unless net-name
+                                (error "Unknown net.uri symbol ~A" name))
+                              (list
+                               `(defun ,net-name (uri)
+                                  (,name (real-uri uri)))
+                               `(defun (setf ,net-name) (new-value uri)
+                                  (setf (,name uri ) new-value)))))
+                          names))))
+  (net-uri-accessors uri-path
+                     uri-host
+                     uri-port
+                     uri-userinfo
+                     uri-fragment
+                     uri-query))
+
+;;; uri-scheme isn't as simple as the other accessors
+
+(defun net.uri:uri-scheme (uri)
+  (values (find-symbol (string-upcase (uri-scheme (real-uri uri)))
+                       :keyword)))
+
+(defun (setf net.uri:uri-scheme) (new-value uri)
+  (setf (uri-scheme (real-uri uri)) new-value))
+
 
 (defun net.uri:copy-uri (uri &key scheme host)
   (copy-uri (real-uri uri) :scheme scheme :host host))
@@ -29,49 +63,6 @@
 
 (defun net.uri::uri-string (uri)
   (render-uri (real-uri uri)))
-
-(defun net.uri:parse-uri (uri-string)
-  (make-instance 'net.uri:uri :real-uri (uri uri-string)))
-
-(defun net.uri:uri-scheme (uri)
-  (values (find-symbol (string-upcase (uri-scheme (real-uri uri)))
-                       :keyword)))
-
-(defun (setf net.uri:uri-scheme) (new-value uri)
-  (setf (uri-scheme (real-uri uri)) new-value))
-
-(defun net.uri:uri-host (uri)
-  (uri-host (real-uri uri)))
-
-(defun (setf net.uri:uri-host) (new-value uri)
-  (setf (uri-host (real-uri uri)) new-value))
-
-(defun net.uri:uri-port (uri)
-  (uri-port (real-uri uri)))
-
-(defun (setf net.uri:uri-port) (new-value uri)
-  (setf (uri-port (real-uri uri)) new-value))
-
-(defun net.uri:uri-path (uri)
-  (uri-path (real-uri uri)))
-
-(defun (setf net.uri:uri-path) (new-value uri)
-  (setf (uri-path (real-uri uri)) new-value))
-
-(defun (setf net.uri:uri-path) (new-value uri)
-  (setf (uri-path (real-uri uri)) new-value))
-
-(defun net.uri:uri-fragment (uri)
-  (uri-fragment (real-uri uri)))
-
-(defun (setf net.uri:uri-fragment) (new-value uri)
-  (setf (uri-fragment (real-uri uri)) new-value))
-
-(defun net.uri:uri-userinfo (uri)
-  (uri-userinfo (real-uri uri)))
-
-(defun net.uri:uri-query (uri)
-  (uri-query (real-uri uri)))
 
 (defun net.uri::uri-path-etc (uri)
   (let ((uri (real-uri uri)))
