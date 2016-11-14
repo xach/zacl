@@ -52,7 +52,8 @@
                 #:usocket-p
                 #:usocket
                 #:stream-usocket
-                #:socket-stream)
+                #:socket-stream
+                #:socket-close)
   (:import-from #:bordeaux-threads
                 #:make-thread
                 #:current-thread

@@ -20,32 +20,86 @@
     ip-address))
 
 
+(defclass zacl-socket (fundamental-binary-output-stream
+                       fundamental-character-output-stream
+                       fundamental-binary-input-stream
+                       fundamental-character-input-stream)
+  ((socket
+    :initarg :socket
+    :reader socket)
+   (real-stream
+    :initarg :real-stream
+    :reader real-stream)))
+
+(defmethod stream-write-byte ((stream zacl-socket) byte)
+  (write-byte byte (real-stream stream)))
+
+(defmethod stream-write-char ((stream zacl-socket) char)
+  (map nil (lambda (octet)
+             (write-byte octet (real-stream stream)))
+       (string-to-octets (string char))))
+
+(defmethod stream-write-sequence ((stream zacl-socket) sequence start end
+                                  &key &allow-other-keys)
+  (when (typep sequence 'string)
+    (setf sequence (string-to-octets sequence :start start :end end))
+    (setf start 0)
+    (setf end (length sequence)))
+  (write-sequence sequence (real-stream stream) :start start :end end))
+
+(defmethod stream-read-char ((stream zacl-socket))
+  (let ((byte (read-byte (real-stream stream) nil :eof)))
+    (if (eql byte :eof)
+        :eof
+        (code-char byte))))
+
+(defmethod stream-read-byte ((stream zacl-socket))
+  (read-byte (real-stream stream) nil :eof))
+
+(defmethod stream-force-output ((stream zacl-socket))
+  (force-output (socket-stream (socket stream))))
+
+(defmethod close ((stream zacl-socket) &key abort)
+  (declare (ignore abort))
+  (socket-close (socket stream)))
+
 (defun socket:make-socket (&key connect local-port local-host reuse-address
                              remote-port remote-host
                              format (backlog 5) type nodelay)
   (declare (ignore format type))
   (ecase connect
     (:passive
-     (socket-listen local-host local-port
-                    :reuseaddress reuse-address
-                    :backlog backlog))
+     (let ((socket
+            (socket-listen local-host local-port
+                           :reuseaddress reuse-address
+                           :element-type '(unsigned-byte 8)
+                           :backlog backlog)))
+       (make-instance 'zacl-socket
+                      :socket socket)))
     ((nil)
-     (socket-connect remote-host remote-port :nodelay nodelay))))
+     (let ((socket
+            (socket-connect remote-host remote-port :nodelay nodelay)))
+       (make-instance 'zacl-socket
+                      :socket socket
+                      :real-stream (socket-stream socket))))))
 
 (defun socket:accept-connection (socket)
-  (socket-accept socket))
+  (let ((incoming (socket-accept (socket socket))))
+    (make-instance 'zacl-socket
+                   :socket incoming
+                   :real-stream (socket-stream incoming))))
 
 (defun socket:local-host (socket)
-  (ip-address-integer (get-local-address socket)))
+  (ip-address-integer (get-local-address (socket socket))))
 
 (defun socket:local-port (socket)
-  (get-local-port socket))
+  (get-local-port (socket socket)))
 
 (defun socket:set-socket-options (socket &key nodelay)
-  (setf (socket-option socket :tcp-no-delay) nodelay))
+  (setf (socket-option (socket socket) :tcp-no-delay) nodelay))
 
 (defun socket:remote-host (socket)
-  (ip-address-integer (get-peer-address socket)))
+  (ip-address-integer (get-peer-address (socket socket))))
 
 (defun socket:ipaddr-to-dotted (ip-integer)
   (format nil "~A.~A.~A.~A"

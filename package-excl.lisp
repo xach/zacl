@@ -88,6 +88,14 @@ longer anonymous, but has a meaningful name name."
 (def-fake-slot excl:stream-error-identifier stream :default-value nil)
 (def-fake-slot excl:stream-error-code stream :default-value 0)
 
+#+ccl
+(defmethod excl:stream-error-identifier ((condition ccl:socket-error))
+  (ccl:socket-error-identifier condition))
+
+#+ccl
+(defmethod excl:stream-error-code ((condition ccl:socket-error))
+  (ccl:socket-error-code condition))
+
 ;;; Misc
 
 (defmacro excl:errorset (form &optional announce catch-breaks)
@@ -316,10 +324,14 @@ values otherwise."
   (let ((buffer (string-to-octets string :start start :end end)))
     (excl:device-write stream buffer 0 (length buffer) nil)))
 
+(defmethod stream-write-sequence ((stream excl:single-channel-simple-stream) sequence start end &key &allow-other-keys)
+  (excl:device-write stream sequence start end nil))
+
+#+ccl
 (defmethod ccl:stream-write-vector ((stream excl:single-channel-simple-stream) sequence start end)
   (unless start (setf start 0))
   (unless end (setf end (length sequence)))
-  (write-sequence sequence (underlying-output-stream stream)))
+  (excl:device-write stream sequence start end nil))
 
 (defmethod stream-force-output ((stream excl:single-channel-simple-stream))
   (force-output (underlying-output-stream stream)))
