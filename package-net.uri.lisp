@@ -34,7 +34,8 @@
   (make-instance 'net.uri:uri :real-uri (uri uri-string)))
 
 (defun net.uri:uri-scheme (uri)
-  (uri-scheme (real-uri uri)))
+  (values (find-symbol (string-upcase (uri-scheme (real-uri uri)))
+                       :keyword)))
 
 (defun (setf net.uri:uri-scheme) (new-value uri)
   (setf (uri-scheme (real-uri uri)) new-value))
