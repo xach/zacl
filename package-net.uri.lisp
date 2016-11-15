@@ -52,8 +52,15 @@
   (setf (uri-scheme (real-uri uri)) new-value))
 
 
-(defun net.uri:copy-uri (uri &key scheme host)
-  (copy-uri (real-uri uri) :scheme scheme :host host))
+(defun net.uri:copy-uri (uri &key scheme userinfo host port path query fragment)
+  (copy-uri (real-uri uri)
+            :scheme scheme
+            :userinfo userinfo
+            :host host
+            :port port
+            :path path
+            :query query
+            :fragment fragment))
 
 (defun net.uri:render-uri (uri &optional stream)
   (render-uri (real-uri uri) stream))
