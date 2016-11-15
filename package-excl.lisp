@@ -280,7 +280,8 @@ values otherwise."
    (excl::output-handle
     :initarg :output-handle)
    (excl::input-handle
-    :initarg :input-handle)
+    :initarg :input-handle
+    :reader excl::stream-input-handle)
    (excl::buffer-ptr)
    (excl::control-out)
    (excl::oc-state)
@@ -359,6 +360,10 @@ values otherwise."
     (setf vector (string-to-octets vector :start start :end end)))
   (write-sequence vector stream :start start :end end)
   end)
+
+(defun excl:read-vector (vector stream &key (start 0) end endian-swap)
+  (declare (ignore endian-swap))
+  (read-sequence vector stream :start start :end end))
 
 (defmethod excl::socket-bytes-written (socket &optional set)
   (declare (ignore socket))

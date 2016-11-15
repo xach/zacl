@@ -143,6 +143,7 @@
            #:device-write
            #:add-stream-instance-flags
            #:write-vector
+           #:read-vector
            #:crlf-base-ef
            #:ef-name
            #:synchronizing-structure
