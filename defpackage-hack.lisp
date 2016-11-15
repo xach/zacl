@@ -13,7 +13,7 @@
                                #:stream-external-format)
        ,@clauses)))
 
-(defun zacl-cl:read-sequence (sequence stream &key start end partial-fill)
+(defun zacl-cl:read-sequence (sequence stream &key (start 0) end partial-fill)
   (declare (ignore partial-fill))
   (read-sequence sequence stream :start start :end end))
 
