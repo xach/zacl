@@ -375,3 +375,37 @@ values otherwise."
 
 (defmacro excl:push-atomic (value place)
   `(push ,value ,place ))
+
+
+;;; MD5
+
+(defun excl:md5-init ()
+  (make-md5-state))
+
+(defun excl:md5-update (state data &key (start 0) end external-format)
+  (when (stringp data)
+    (setf data (string-to-octets data
+                                 :external-format (or external-format :latin-1)
+                                 :start start
+                                 :end (or end (length data))))
+    (setf start 0)
+    (setf end (length data)))
+  (update-md5-state state data :start start :end end)
+  (values))
+
+(defun excl:md5-final (state &key (return :integer))
+  (let ((result (finalize-md5-state state)))
+    (ecase return
+      (:usb8
+       result)
+      (:hex
+       (with-output-to-string (s)
+         (map nil (lambda (octet)
+                    (format s "~2,'0X" octet))
+              result)))
+      (:integer
+       (let ((i 0))
+         (map nil (lambda (octet)
+                    (setf i (logior (ash i 8) octet)))
+              result)
+         i)))))

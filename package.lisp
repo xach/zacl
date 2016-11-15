@@ -35,6 +35,10 @@
                 #:create-scanner
                 #:scan
                 #:split)
+  (:import-from #:md5
+                #:make-md5-state
+                #:update-md5-state
+                #:finalize-md5-state)
   (:import-from #:split-sequence
                 #:split-sequence)
   (:import-from #:flexi-streams
@@ -133,6 +137,9 @@
            #:then
            #:thenret
            #:else)
+  (:export #:md5-init
+           #:md5-update
+           #:md5-final)
   (:export #:pop-atomic
            #:push-atomic
            #:single-channel-simple-stream
