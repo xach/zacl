@@ -45,6 +45,13 @@ longer anonymous, but has a meaningful name name."
 (defmacro excl::fast (&body body)
   `(progn ,@body))
 
+(defun excl:gc (&optional full)
+  (declare (ignorable full))
+  #+ccl
+  (ccl:gc)
+  #+sbcl
+  (sb-ext:gc :full full))
+
 (defun excl:match-re (pattern string &key (return :string) case-fold)
   (multiple-value-bind (start end regs-starts regs-ends)
       (scan (create-scanner pattern :case-insensitive-mode case-fold) string )

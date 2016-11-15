@@ -142,7 +142,8 @@
   (:export #:md5-init
            #:md5-update
            #:md5-final)
-  (:export #:pop-atomic
+  (:export #:gc
+           #:pop-atomic
            #:push-atomic
            #:single-channel-simple-stream
            #:install-single-channel-character-strategy
