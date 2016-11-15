@@ -42,9 +42,9 @@ longer anonymous, but has a meaningful name name."
   (find feature *features*))
 
 
-(defun excl:match-re (pattern string &key (return :string))
+(defun excl:match-re (pattern string &key (return :string) case-fold)
   (multiple-value-bind (start end regs-starts regs-ends)
-      (scan pattern string)
+      (scan (create-scanner pattern :case-insensitive-mode case-fold) string )
     (when (and start end)
       (ecase return
         (:index
@@ -54,10 +54,15 @@ longer anonymous, but has a meaningful name name."
                              (map 'list (lambda (start end)
                                           (subseq string start end))
                                   regs-starts
-                                  regs-ends))))))))
+                                  regs-ends))))
+        ((nil)
+         t)))))
 
 (defun excl:match-regexp (pattern string &key (return :string))
   (excl:match-re pattern string :return return))
+
+(defun excl:compile-regexp (pattern)
+  (create-scanner pattern))
 
 
 (defmacro excl:with-output-to-buffer ((stream) &body body)

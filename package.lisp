@@ -182,7 +182,8 @@
            #:lockable-object)
   (:export #:match-regexp
            #:match-re
-           #:replace-regexp)
+           #:replace-regexp
+           #:compile-regexp)
   (:export #:with-output-to-buffer)
   (:export #:def-stream-class
            #:terminal-simple-stream
