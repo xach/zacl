@@ -43,6 +43,7 @@
                 #:split-sequence)
   (:import-from #:flexi-streams
                 #:with-output-to-sequence
+                #:get-output-stream-sequence
                 #:string-to-octets
                 #:octets-to-string)
   (:import-from #:usocket
@@ -132,7 +133,8 @@
            #:unix-signal
            #:make-basic-lock
            #:*std-control-out-table*
-           #:socket-bytes-written)
+           #:socket-bytes-written
+           #:fast)
   (:export #:if*
            #:then
            #:thenret
@@ -184,7 +186,8 @@
            #:match-re
            #:replace-regexp
            #:compile-regexp)
-  (:export #:with-output-to-buffer)
+  (:export #:with-output-to-buffer
+           #:get-output-stream-buffer)
   (:export #:def-stream-class
            #:terminal-simple-stream
            #:with-stream-class

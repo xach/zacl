@@ -42,6 +42,9 @@ longer anonymous, but has a meaningful name name."
   (find feature *features*))
 
 
+(defmacro excl::fast (&body body)
+  `(progn ,@body))
+
 (defun excl:match-re (pattern string &key (return :string) case-fold)
   (multiple-value-bind (start end regs-starts regs-ends)
       (scan (create-scanner pattern :case-insensitive-mode case-fold) string )
@@ -68,6 +71,9 @@ longer anonymous, but has a meaningful name name."
 (defmacro excl:with-output-to-buffer ((stream) &body body)
   `(with-output-to-sequence (,stream)
      ,@body))
+
+(defun excl:get-output-stream-buffer (stream)
+  (get-output-stream-sequence stream))
 
 
 ;;; Streams
