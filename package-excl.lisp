@@ -14,7 +14,7 @@
   (let ((entry (assoc external-format *external-format-translations*)))
     (if entry
         (cdr entry)
-        external-format)))
+        :utf-8)))
 
 
 (defvar excl:*initial-terminal-io* *terminal-io*)

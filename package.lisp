@@ -69,13 +69,13 @@
                 #:fundamental-binary-input-stream
                 #:fundamental-character-output-stream
                 #:fundamental-character-input-stream
-                #:stream-read-char
                 #:stream-write-char
                 #:stream-write-byte
                 #:stream-write-string
                 #:stream-write-sequence
+                #:stream-read-char
                 #:stream-read-byte
-                #:stream-read-byte
+                #:stream-read-sequence
                 #:stream-force-output)
   (:import-from #:trivial-garbage
                 #:make-weak-hash-table

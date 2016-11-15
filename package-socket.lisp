@@ -47,14 +47,28 @@
     (setf end (length sequence)))
   (write-sequence sequence (real-stream stream) :start start :end end))
 
+(defmethod stream-read-byte ((stream zacl-socket))
+  (read-byte (real-stream stream) nil :eof))
+
 (defmethod stream-read-char ((stream zacl-socket))
   (let ((byte (read-byte (real-stream stream) nil :eof)))
     (if (eql byte :eof)
         :eof
         (code-char byte))))
 
-(defmethod stream-read-byte ((stream zacl-socket))
-  (read-byte (real-stream stream) nil :eof))
+(defmethod stream-read-sequence ((stream zacl-socket) sequence start end
+                                 &key &allow-other-keys)
+  (when (stringp sequence)
+    (error "Not implemented"))
+  (unless start (setf start 0))
+  (unless end (setf end (length sequence)))
+  (read-sequence sequence (real-stream stream) :start start :end end))
+
+#+ccl
+(defmethod ccl:stream-read-vector ((stream zacl-socket) sequence start end)
+  (unless start (setf start 0))
+  (unless end (setf end (length sequence)))
+  (read-sequence sequence (real-stream stream) :start start :end end))
 
 (defmethod stream-force-output ((stream zacl-socket))
   (force-output (socket-stream (socket stream))))
@@ -78,7 +92,9 @@
                       :socket socket)))
     ((nil)
      (let ((socket
-            (socket-connect remote-host remote-port :nodelay nodelay)))
+            (socket-connect remote-host remote-port
+                            :nodelay nodelay
+                            :element-type '(unsigned-byte 8))))
        (make-instance 'zacl-socket
                       :socket socket
                       :real-stream (socket-stream socket))))))
