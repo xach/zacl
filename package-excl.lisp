@@ -133,6 +133,9 @@ values otherwise."
            nil
            (values-list (list* t ,result))))))
 
+(defun excl:stream-input-fn (stream)
+  (stream-device stream :input))
+
 (defun excl:find-external-format (name &key errorp)
   (declare (ignore errorp))
   (declare (ignore name))

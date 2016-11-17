@@ -31,9 +31,13 @@
   (:import-from #:ccl
                 ;; XXX private
                 #:atomic-incf-decf)
+  #+ccl
   (:import-from #:ccl
                 #:lookup-hostname
                 #:ipaddr-to-hostname)
+  #+ccl
+  (:import-from #:ccl
+                #:stream-device)
   (:import-from #:alexandria
                 #:hash-table-alist
                 #:extremum)
@@ -155,6 +159,7 @@
            #:md5-final)
   (:export #:gc
            #:atomic-conditional-setf
+           #:stream-input-fn
            #:fasl-write
            #:fasl-read
            #:pop-atomic
