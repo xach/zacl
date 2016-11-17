@@ -90,13 +90,12 @@
 (defun undefined-report ()
   (let* ((alist (sort (hash-table-alist *undefined-things*) #'>
                      :key #'cdr))
-         (longest-key (extremum (mapcar 'car alist) #'> :key #'length))
          (total (length alist))
          (sum (reduce #'+ (mapcar 'cdr alist))))
     (format t "~D distinct undefined thing~:P~%" total)
     (format t "~D total undefined thing problem~:P~%" sum)
     (loop for (thing . count) in alist
-          do (format t "  ~v@A ~4D~%" (length longest-key) thing count))))
+          do (format t "  ~4D ~A~%"  count thing))))
 
 (defun try (&optional harder)
   (unless *to-build*
