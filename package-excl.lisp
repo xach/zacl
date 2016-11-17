@@ -146,6 +146,12 @@ values otherwise."
 (defun excl::filesys-type (native-namestring)
   (file-kind native-namestring))
 
+(defun excl.osi:stat (file)
+  (list :mtime (stat-mtime file)))
+
+(defun excl.osi:stat-mtime (stat)
+  (getf stat :mtime))
+
 (defun excl:find-external-format (name &key errorp)
   (declare (ignore errorp))
   (declare (ignore name))

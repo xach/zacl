@@ -13,3 +13,6 @@
 
 (defun file-kind (pathname)
   (ccl::%file-kind (stat-mode pathname)))
+
+(defun stat-mtime (pathname)
+  (nth-value 3 (ccl::%stat pathname)))

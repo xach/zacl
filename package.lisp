@@ -142,6 +142,8 @@
 
 (defpackage #:excl
   (:use #:zacl-if-star)
+  (:import-from #:cl
+                #:file-write-date)
   (:intern #:stream-property-list
            #:with-dynamic-extend-usb8-array
            #:unix-signal
