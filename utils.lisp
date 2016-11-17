@@ -23,11 +23,18 @@
 (defparameter *build-time-features*
   '(:smp :smp-macros :allegro))
 
+(defun unused-lexical-warning-p (condition)
+  (search "Unused lexical" (princ-to-string condition)))
+
+(deftype unused-lexical-warning ()
+  `(satisfies unused-lexical-warning-p))
+
 (defun call-with-zacl-build-environment (fun)
   (let ((*readtable* zacl-reader:*allegro-rewriting-readtable*)
         (*package* (find-package :user))
         (*features* (append *build-time-features* *features*)))
-    (funcall fun)))
+    (handler-bind ((unused-lexical-warning #'muffle-warning))
+      (funcall fun))))
 
 (defmacro with-zacl-build-environment (&body body)
   `(call-with-zacl-build-environment (lambda () ,@body)))
