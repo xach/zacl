@@ -62,9 +62,10 @@
 (defun reset ()
   (setf *to-build* *aserve-files*))
 
-(defun try ()
+(defun try (&optional harder)
   (unless *to-build*
-    (cerror "Call reset" "Nothing left to build -- (reset) to start over")
+    (unless harder
+      (cerror "Call reset" "Nothing left to build -- (reset) to start over"))
     (reset))
   (let ((*default-pathname-defaults* *source-directory*))
     (loop
