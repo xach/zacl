@@ -149,7 +149,10 @@
            #:*std-control-out-table*
            #:socket-bytes-written
            #:fast
-           #:.atomically)
+           #:.atomically
+           #:filesys-size
+           #:filesys-write-date
+           #:filesys-type)
   (:export #:if*
            #:then
            #:thenret

@@ -19,6 +19,8 @@
                #:alexandria)
   :serial t
   :components ((:file "package")
+               #+clozure
+               (:file "clozure-specific")
                (:file "defpackage-hack")
                (:file "reader")
                (:file "fake-slots")

@@ -137,6 +137,15 @@ values otherwise."
   "Return the underlying Unix input FD of STREAM."
   (stream-device stream :input))
 
+(defun excl::filesys-size (fd)
+  (fstat-size fd))
+
+(defun excl::filesys-write-date (fd)
+  (fstat-mtime fd))
+
+(defun excl::filesys-type (native-namestring)
+  (file-kind native-namestring))
+
 (defun excl:find-external-format (name &key errorp)
   (declare (ignore errorp))
   (declare (ignore name))
