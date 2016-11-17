@@ -164,6 +164,7 @@
            #:md5-final)
   (:export #:gc
            #:atomic-conditional-setf
+           #:delimited-string-to-list
            #:stream-input-fn
            #:fasl-write
            #:fasl-read

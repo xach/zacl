@@ -133,6 +133,12 @@ values otherwise."
            nil
            (values-list (list* t ,result))))))
 
+(defun excl:delimited-string-to-list (string delimiter)
+  (unless (characterp delimiter)
+    ;; aserve only uses a character
+    (error "Unsupported delimiter -- ~A" delimiter))
+  (split-sequence delimiter string))
+
 (defun excl:stream-input-fn (stream)
   "Return the underlying Unix input FD of STREAM."
   (stream-unix-fd stream))
