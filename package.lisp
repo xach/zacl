@@ -102,7 +102,11 @@
                 #:uri-fragment
                 #:uri-userinfo
                 #:uri-query
-                #:parse-uri))
+                #:parse-uri)
+  (:import-from #:cl-store
+                #:store
+                #:restore
+                #:*check-for-circs*))
 
 (defpackage #:zacl-reader
   (:use #:cl)
@@ -143,6 +147,8 @@
            #:md5-update
            #:md5-final)
   (:export #:gc
+           #:fasl-write
+           #:fasl-read
            #:pop-atomic
            #:push-atomic
            #:single-channel-simple-stream

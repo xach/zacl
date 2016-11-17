@@ -14,7 +14,8 @@
                #:trivial-garbage
                #:trivial-backtrace
                #:split-sequence
-               #:queues.simple-cqueue)
+               #:queues.simple-cqueue
+               #:cl-store)
   :serial t
   :components ((:file "package")
                (:file "defpackage-hack")

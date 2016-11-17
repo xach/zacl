@@ -427,3 +427,21 @@ values otherwise."
                     (setf i (logior (ash i 8) octet)))
               result)
          i)))))
+
+;;; FASL
+
+(defun excl:fasl-write (object stream &optional fasl-circle compile-verbose)
+  (declare (ignore compile-verbose))
+  (let ((*check-for-circs* fasl-circle))
+    ;; This conversion is used because calls to EXCL:FASL-WRITE assume
+    ;; a bivalent stream while passing a character stream. May not
+    ;; matter, because it's not in a hot spot - just called at proxy
+    ;; shutdown.
+    (let ((octets
+           (with-output-to-sequence (s)
+             (store object stream))))
+      (write-string (octets-to-string octets :external-format :latin-1) stream))))
+
+(defun excl:fasl-read (file)
+  (with-open-file (stream file :element-type '(unsigned-byte 8))
+    (restore stream)))
