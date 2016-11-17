@@ -124,3 +124,11 @@
           (ldb (byte 8  8) ip-integer)
           (ldb (byte 8  0) ip-integer)))
 
+(defmacro socket:with-pending-connect (&body body)
+  `(progn ,@body))
+
+(defun socket:ipaddr-to-hostname (ipaddr)
+  (ipaddr-to-hostname ipaddr))
+
+(defun socket:lookup-hostname (name)
+  (lookup-hostname name))

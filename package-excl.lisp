@@ -116,6 +116,13 @@ longer anonymous, but has a meaningful name name."
 
 ;;; Misc
 
+(defmacro excl::.atomically (&body body)
+  `(progn ,@body))
+
+(defmacro excl:atomic-conditional-setf (place new-value old-value)
+  (declare (ignore old-value))
+  `(setf ,place ,new-value))
+
 (defmacro excl:errorset (form &optional announce catch-breaks)
   "Return NIL if FORM signals an error, T and values as multiple
 values otherwise."

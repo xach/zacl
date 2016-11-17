@@ -31,6 +31,9 @@
   (:import-from #:ccl
                 ;; XXX private
                 #:atomic-incf-decf)
+  (:import-from #:ccl
+                #:lookup-hostname
+                #:ipaddr-to-hostname)
   (:import-from #:cl-ppcre
                 #:create-scanner
                 #:scan
@@ -138,7 +141,8 @@
            #:make-basic-lock
            #:*std-control-out-table*
            #:socket-bytes-written
-           #:fast)
+           #:fast
+           #:.atomically)
   (:export #:if*
            #:then
            #:thenret
@@ -147,6 +151,7 @@
            #:md5-update
            #:md5-final)
   (:export #:gc
+           #:atomic-conditional-setf
            #:fasl-write
            #:fasl-read
            #:pop-atomic
