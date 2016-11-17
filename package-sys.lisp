@@ -13,3 +13,7 @@
 
 (defun sys:command-line-arguments ()
   (command-line-arguments))
+
+(defun sys:reap-os-subprocess (&key pid wait)
+  (declare (ignore pid wait))
+  (error "Not implemented -- SYS:REAP-OS-SUBPROCESS"))
