@@ -15,7 +15,8 @@
                #:trivial-backtrace
                #:split-sequence
                #:queues.simple-cqueue
-               #:cl-store)
+               #:cl-store
+               #:alexandria)
   :serial t
   :components ((:file "package")
                (:file "defpackage-hack")

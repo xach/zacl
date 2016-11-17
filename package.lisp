@@ -34,6 +34,9 @@
   (:import-from #:ccl
                 #:lookup-hostname
                 #:ipaddr-to-hostname)
+  (:import-from #:alexandria
+                #:hash-table-alist
+                #:extremum)
   (:import-from #:cl-ppcre
                 #:create-scanner
                 #:scan

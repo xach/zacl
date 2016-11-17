@@ -29,11 +29,35 @@
 (deftype unused-lexical-warning ()
   `(satisfies unused-lexical-warning-p))
 
+(defun undefined-thing-warning-p (condition)
+  (search ": Undefined" (princ-to-string condition)))
+
+(deftype undefined-thing-warning ()
+  `(satisfies undefined-thing-warning-p))
+
+(defvar *undefined-things* (make-hash-table :test 'equalp))
+
+(defun position-after-search (substring string)
+  (let ((start (search substring string)))
+    (when start
+      (+ start (length substring)))))
+
+(defun undefined-warning-thing (condition)
+  (let* ((warning-text (princ-to-string condition))
+         (pos (position-after-search ": Undefined " warning-text)))
+    (when pos
+      (subseq warning-text pos))))
+
 (defun call-with-zacl-build-environment (fun)
   (let ((*readtable* zacl-reader:*allegro-rewriting-readtable*)
         (*package* (find-package :user))
         (*features* (append *build-time-features* *features*)))
-    (handler-bind ((unused-lexical-warning #'muffle-warning))
+    (handler-bind ((unused-lexical-warning #'muffle-warning)
+                   (undefined-thing-warning
+                    (lambda (c)
+                      (incf (gethash (undefined-warning-thing c)
+                                     *undefined-things*
+                                     0)))))
       (funcall fun))))
 
 (defmacro with-zacl-build-environment (&body body)
@@ -60,7 +84,19 @@
                                             (user-homedir-pathname)))
 
 (defun reset ()
+  (clrhash *undefined-things*)
   (setf *to-build* *aserve-files*))
+
+(defun undefined-report ()
+  (let* ((alist (sort (hash-table-alist *undefined-things*) #'>
+                     :key #'cdr))
+         (longest-key (extremum (mapcar 'car alist) #'> :key #'length))
+         (total (length alist))
+         (sum (reduce #'+ (mapcar 'cdr alist))))
+    (format t "~D distinct undefined thing~:P~%" total)
+    (format t "~D total undefined thing problem~:P~%" sum)
+    (loop for (thing . count) in alist
+          do (format t "  ~v@A ~4D~%" (length longest-key) thing count))))
 
 (defun try (&optional harder)
   (unless *to-build*
