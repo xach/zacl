@@ -134,6 +134,7 @@ values otherwise."
            (values-list (list* t ,result))))))
 
 (defun excl:stream-input-fn (stream)
+  "Return the underlying Unix input FD of STREAM."
   (stream-device stream :input))
 
 (defun excl:find-external-format (name &key errorp)
