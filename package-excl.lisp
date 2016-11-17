@@ -135,7 +135,7 @@ values otherwise."
 
 (defun excl:stream-input-fn (stream)
   "Return the underlying Unix input FD of STREAM."
-  (stream-device stream :input))
+  (stream-unix-fd stream))
 
 (defun excl::filesys-size (fd)
   (fstat-size fd))

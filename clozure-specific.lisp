@@ -16,3 +16,7 @@
 
 (defun stat-mtime (pathname)
   (nth-value 3 (ccl::%stat pathname)))
+
+(defun stream-unix-fd (stream)
+  ;; Only used for input in aserve
+  (stream-device stream :input))
