@@ -133,6 +133,12 @@ values otherwise."
            nil
            (values-list (list* t ,result))))))
 
+(defun excl:run-shell-command (program
+                               &key input output error-output separate-streams
+                                 wait environment show-window)
+  (declare (ignore program input output error-output separate-streams wait environment show-window))
+  (error "Not implemented -- RUN-SHELL-COMMAND"))
+
 (defun excl:delimited-string-to-list (string delimiter)
   (unless (characterp delimiter)
     ;; aserve only uses a character
