@@ -139,6 +139,9 @@ values otherwise."
   (declare (ignore program input output error-output separate-streams wait environment show-window))
   (error "Not implemented -- RUN-SHELL-COMMAND"))
 
+(defun excl::merge-to-physical (pathname)
+  (merge-pathnames (translate-logical-pathname pathname)))
+
 (defun excl:delimited-string-to-list (string delimiter)
   (unless (characterp delimiter)
     ;; aserve only uses a character

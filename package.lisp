@@ -156,7 +156,8 @@
            #:.atomically
            #:filesys-size
            #:filesys-write-date
-           #:filesys-type)
+           #:filesys-type
+           #:merge-to-physical)
   (:export #:if*
            #:then
            #:thenret
