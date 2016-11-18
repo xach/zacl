@@ -16,7 +16,8 @@
                #:split-sequence
                #:queues.simple-cqueue
                #:cl-store
-               #:alexandria)
+               #:alexandria
+               #:md5)
   :serial t
   :components ((:file "package")
                #+clozure
