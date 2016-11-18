@@ -135,6 +135,9 @@ values otherwise."
            nil
            (values-list (list* t ,result))))))
 
+(defun excl::tilde-expand-unix-namestring (namestring)
+  (merge-pathnames namestring))
+
 (defun excl:run-shell-command (program
                                &key input output error-output separate-streams
                                  wait environment show-window)

@@ -2,6 +2,8 @@
 
 (in-package #:zacl)
 
+(defvar sys:*tilde-expand-namestrings* nil)
+
 (define-symbol-macro sys:*current-process* (current-thread))
 
 (defun sys::thread-bindstack-index (&rest args)
