@@ -124,6 +124,11 @@
           (ldb (byte 8  8) ip-integer)
           (ldb (byte 8  0) ip-integer)))
 
+(defun socket:dotted-to-ipaddr (dotted &key errorp)
+  (if errorp
+      (dotted-to-ipaddr dotted)
+      (ignore-errors (dotted-to-ipaddr dotted))))
+
 (defmacro socket:with-pending-connect (&body body)
   `(progn ,@body))
 

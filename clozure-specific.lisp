@@ -20,3 +20,7 @@
 (defun stream-unix-fd (stream)
   ;; Only used for input in aserve
   (stream-device stream :input))
+
+(defun dotted-to-ipaddr (dotted)
+  (ccl:dotted-to-ipaddr dotted))
+
