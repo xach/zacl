@@ -137,3 +137,11 @@
 
 (defun socket:lookup-hostname (name)
   (lookup-hostname name))
+
+(defun socket::make-ssl-server-stream (&rest args)
+  (declare (ignore args))
+  (error "Not implemented -- MAKE-SSL-SERVER-STREAM"))
+
+(defun socket::make-ssl-client-stream (&rest args)
+  (declare (ignore args))
+  (error "Not implemented -- MAKE-SSL-CLIENT-STREAM"))

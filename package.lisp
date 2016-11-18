@@ -234,6 +234,8 @@
 
 (defpackage #:socket
   (:use)
+  (:intern #:make-ssl-server-stream
+           #:make-ssl-client-stream)
   (:export #:make-socket
            #:socket-error
            #:accept-connection
