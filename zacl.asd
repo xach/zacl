@@ -34,6 +34,7 @@
                (:file "package-net.uri")
                (:file "package-toplevel.debug")
                (:file "package-util.zip")
+               (:file "package-util.string")
                (:file "utils")
                (:file "provides")))
 
