@@ -142,6 +142,13 @@ values otherwise."
 (defun excl::merge-to-physical (pathname)
   (merge-pathnames (translate-logical-pathname pathname)))
 
+(defun excl:rename-file-raw (file new-name)
+  (let ((new-name (merge-pathnames new-name
+                                   (make-pathname :name :unspecific
+                                                  :type :unspecific
+                                                  :defaults *default-pathname-defaults*))))
+    (rename-file file new-name)))
+
 (defun excl:delimited-string-to-list (string delimiter)
   (unless (characterp delimiter)
     ;; aserve only uses a character
