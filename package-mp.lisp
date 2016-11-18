@@ -116,3 +116,9 @@
   (:method (queue &key wait empty-queue-result whostate)
     (declare (ignore whostate wait))
     (qpop (queue queue) empty-queue-result)))
+
+(defun mp:wait-for-input-available (stream-or-fds
+                                    &key wait-function whostate timeout)
+  (declare (ignore stream-or-fds wait-function whostate timeout))
+  ;; Only used by aserve cgi
+  (error "Not implemented -- MP:WAIT-FOR-INPUT-AVAILABLE"))
