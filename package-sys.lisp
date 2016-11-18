@@ -17,3 +17,8 @@
 (defun sys:reap-os-subprocess (&key pid wait)
   (declare (ignore pid wait))
   (error "Not implemented -- SYS:REAP-OS-SUBPROCESS"))
+
+(defmacro sys:with-timeout ((timeout &body timeout-body) &body body)
+  `(handler-case
+       (with-timeout (,timeout) ,@body)
+     (timeout () ,@timeout-body)))

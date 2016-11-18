@@ -73,7 +73,9 @@
                 #:make-thread
                 #:current-thread
                 #:make-lock
-                #:with-lock-held)
+                #:with-lock-held
+                #:with-timeout
+                #:timeout)
   (:import-from #:queues
                 #:make-queue
                 #:qpush
@@ -290,7 +292,8 @@
 (defpackage #:mp
   (:use)
   (:import-from #:sys
-                #:*current-process*)
+                #:*current-process*
+                #:with-timeout)
   (:export #:with-timeout
            #:without-scheduling)
   (:export #:make-gate
