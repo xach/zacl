@@ -157,7 +157,8 @@
            #:filesys-size
            #:filesys-write-date
            #:filesys-type
-           #:merge-to-physical)
+           #:merge-to-physical
+           #:ssl-context)
   (:export #:if*
            #:then
            #:thenret

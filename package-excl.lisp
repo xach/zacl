@@ -116,6 +116,8 @@ longer anonymous, but has a meaningful name name."
 
 ;;; Misc
 
+(defstruct excl::ssl-context)
+
 (defmacro excl::.atomically (&body body)
   `(progn ,@body))
 
