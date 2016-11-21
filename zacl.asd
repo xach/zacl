@@ -6,6 +6,7 @@
   :author "Zach Beane"
   :license "BSD"
   :depends-on (#:uiop
+               #:asdf
                #:usocket
                #:bordeaux-threads
                #:cl-ppcre
@@ -37,5 +38,6 @@
                (:file "package-util.zip")
                (:file "package-util.string")
                (:file "utils")
+               (:file "asdf-tricks")
                (:file "provides")))
 
