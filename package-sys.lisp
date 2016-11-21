@@ -24,3 +24,7 @@
   `(handler-case
        (with-timeout (,timeout) ,@body)
      (timeout () ,@timeout-body)))
+
+(defun sys:gsgc-parameter (kind)
+  (declare (ignore kind))
+  42)

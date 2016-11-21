@@ -267,6 +267,7 @@
            #:command-line-arguments
            #:*tilde-expand-namestrings*
            #:gsgc-switch
+           #:gsgc-parameter
            #:defpatch))
 
 (defpackage #:util.zip
