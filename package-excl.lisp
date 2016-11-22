@@ -428,7 +428,9 @@ values otherwise."
   ;; The real write-vector has more complicated blocking
   ;; behavior. Save that for later.
   (when (stringp vector)
-    (setf vector (string-to-octets vector :start start :end end)))
+    (setf vector (string-to-octets vector :start start :end end))
+    (setf start 0)
+    (setf end (length vector)))
   (write-sequence vector stream :start start :end end)
   end)
 
