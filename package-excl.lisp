@@ -204,7 +204,7 @@ values otherwise."
      ,@body))
 
 (defun excl:native-string-sizeof (string &key (external-format :latin1))
-  (length (string-to-octets string :external-format external-format)))
+  (length (string-to-octets string :external-format (translate-external-format external-format))))
 
 (defun excl:string-to-mb (string &key external-format mb-vector null-terminate)
   (declare (ignore mb-vector))
