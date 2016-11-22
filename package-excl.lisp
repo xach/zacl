@@ -207,11 +207,14 @@ values otherwise."
   (length (string-to-octets string :external-format (translate-external-format external-format))))
 
 (defun excl:string-to-mb (string &key external-format mb-vector null-terminate)
-  (declare (ignore mb-vector))
   (when null-terminate
     (error "Cannot null-terminate"))
-  (string-to-octets string
-                    :external-format (translate-external-format external-format)))
+  (let ((result
+         (string-to-octets string
+                           :external-format (translate-external-format external-format))))
+    (if mb-vector
+        (replace mb-vector result)
+        result)))
 
 (defun excl:string-to-octets (string &key external-format null-terminate)
   (when null-terminate
