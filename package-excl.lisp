@@ -167,8 +167,11 @@ values otherwise."
 (defun excl::filesys-size (fd)
   (fstat-size fd))
 
+(defvar *unix-epoch-universal-time*
+  (encode-universal-time 0 0 0 1 1 1970 0))
+
 (defun excl::filesys-write-date (fd)
-  (fstat-mtime fd))
+  (+ *unix-epoch-universal-time* (fstat-mtime fd)))
 
 (defun excl::filesys-type (native-namestring)
   (file-kind native-namestring))
