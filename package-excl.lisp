@@ -177,7 +177,9 @@ values otherwise."
   (file-kind native-namestring))
 
 (defun excl.osi:stat (file)
-  (list :mtime (stat-mtime file)))
+  (if (probe-file file)
+      (list :mtime (stat-mtime file))
+      (error "~A does not exist" file)))
 
 (defun excl.osi:stat-mtime (stat)
   (getf stat :mtime))
