@@ -430,12 +430,13 @@ values otherwise."
 (defun excl:write-vector (vector stream &key (start 0) (end (length vector)))
   ;; The real write-vector has more complicated blocking
   ;; behavior. Save that for later.
-  (when (stringp vector)
-    (setf vector (string-to-octets vector :start start :end end))
-    (setf start 0)
-    (setf end (length vector)))
-  (write-sequence vector stream :start start :end end)
-  end)
+  (let ((result end))
+    (when (stringp vector)
+      (setf vector (string-to-octets vector :start start :end end))
+      (setf start 0)
+      (setf end (length vector)))
+    (write-sequence vector stream :start start :end end)
+    result))
 
 (defun excl:read-vector (vector stream &key (start 0) end endian-swap)
   (declare (ignore endian-swap))
