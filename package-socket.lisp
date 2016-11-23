@@ -145,3 +145,7 @@
 (defun socket::make-ssl-client-stream (&rest args)
   (declare (ignore args))
   (error "Not implemented -- MAKE-SSL-CLIENT-STREAM"))
+
+(defun socket:socket-control (socket &key read-timeout write-timeout)
+  (declare (ignore socket read-timeout write-timeout))
+  nil)
