@@ -56,6 +56,11 @@
         :eof
         (code-char byte))))
 
+(defmethod stream-read-char-no-hang ((stream zacl-socket))
+  (let ((ready (wait-for-input (socket stream) :timeout 0 :ready-only t)))
+    (when ready
+      (stream-read-char stream))))
+
 (defmethod stream-read-sequence ((stream zacl-socket) sequence start end
                                  &key &allow-other-keys)
   (when (stringp sequence)
@@ -68,7 +73,17 @@
 (defmethod ccl:stream-read-vector ((stream zacl-socket) sequence start end)
   (unless start (setf start 0))
   (unless end (setf end (length sequence)))
-  (read-sequence sequence (real-stream stream) :start start :end end))
+  (if (stringp sequence)
+      (let ((offset start)
+            (buffer (make-array (- end start) :element-type '(unsigned-byte 8))))
+        (let* ((after-index (read-sequence buffer (real-stream stream)))
+               (string (octets-to-string buffer :start 0 :end after-index
+                                         :external-format :latin-1)))
+          (replace sequence string :start1 start :end1 end
+                   :start2 0 :end2 after-index)
+          (print (list :stream-read-vector "Is this working?"))
+          (+ offset after-index)))
+      (read-sequence sequence (real-stream stream) :start start :end end)))
 
 (defmethod stream-force-output ((stream zacl-socket))
   (force-output (socket-stream (socket stream))))

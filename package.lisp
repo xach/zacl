@@ -68,7 +68,8 @@
                 #:usocket
                 #:stream-usocket
                 #:socket-stream
-                #:socket-close)
+                #:socket-close
+                #:wait-for-input)
   (:import-from #:bordeaux-threads
                 #:make-thread
                 #:current-thread
@@ -91,6 +92,7 @@
                 #:stream-write-string
                 #:stream-write-sequence
                 #:stream-read-char
+                #:stream-read-char-no-hang
                 #:stream-read-byte
                 #:stream-read-sequence
                 #:stream-force-output)
