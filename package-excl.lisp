@@ -363,6 +363,7 @@ values otherwise."
     :reader excl::stream-input-handle)
    (excl::buffer-ptr)
    (excl::control-out)
+   (excl::co-state)
    (excl::oc-state)
    (external-format
     :initarg :external-format
