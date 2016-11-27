@@ -45,8 +45,9 @@
 ;;; uri-scheme isn't as simple as the other accessors
 
 (defun net.uri:uri-scheme (uri)
-  (values (find-symbol (string-upcase (uri-scheme (real-uri uri)))
-                       :keyword)))
+  (let ((scheme (uri-scheme (real-uri uri))))
+    (when scheme
+      (values (find-symbol (string-upcase scheme) :keyword)))))
 
 (defun (setf net.uri:uri-scheme) (new-value uri)
   (setf (uri-scheme (real-uri uri)) new-value))
