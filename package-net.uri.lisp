@@ -19,6 +19,13 @@
   (print-unreadable-object (uri stream :type t)
     (format stream "~S" (render-uri (real-uri uri)))))
 
+(defun uri-designator (uri)
+  (etypecase uri
+    (string
+     (uri uri))
+    (net.uri:uri
+     uri)))
+
 (defun net.uri:parse-uri (uri-string)
   (make-instance 'net.uri:uri :real-uri (uri uri-string)))
 
@@ -74,8 +81,11 @@
 (defun net.uri:render-uri (uri &optional stream)
   (render-uri (real-uri uri) stream))
 
-(defun net.uri:merge-uris (new-uri uri)
-  (merge-uris (real-uri new-uri) (real-uri uri)))
+(defun net.uri:merge-uris (new-uri uri &optional place)
+  (when place
+    (error "PLACE option not yet implemented"))
+  (merge-uris (real-uri (uri-designator new-uri))
+              (real-uri (uri-designator uri))))
 
 (defun net.uri::uri-string (uri)
   (render-uri (real-uri uri)))
