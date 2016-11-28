@@ -415,6 +415,15 @@ values otherwise."
   (unless end (setf end (length sequence)))
   (excl:device-write stream sequence start end nil))
 
+#+ccl
+(defmethod ccl:stream-read-vector ((stream excl:single-channel-simple-stream) sequence start end)
+  (unless start (setf start 0))
+  (unless end (setf end (length sequence)))
+  (let ((result (excl:device-read stream sequence start end nil)))
+    (if (minusp result)
+        0
+        result)))
+
 (defmethod stream-force-output ((stream excl:single-channel-simple-stream))
   (force-output (underlying-output-stream stream)))
 

@@ -29,7 +29,9 @@
     :reader socket)
    (real-stream
     :initarg :real-stream
-    :reader real-stream)))
+    :reader real-stream
+    :reader underlying-input-stream
+    :reader underlying-output-stream)))
 
 (defmethod stream-write-byte ((stream zacl-socket) byte)
   (write-byte byte (real-stream stream)))
@@ -63,8 +65,6 @@
 
 (defmethod stream-read-sequence ((stream zacl-socket) sequence start end
                                  &key &allow-other-keys)
-  (when (stringp sequence)
-    (error "Not implemented"))
   (unless start (setf start 0))
   (unless end (setf end (length sequence)))
   (read-sequence sequence (real-stream stream) :start start :end end))
