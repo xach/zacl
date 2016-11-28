@@ -11,7 +11,8 @@
                 ;; XXX Private package
                 #:without-interrupts)
   (:import-from #:cl+ssl
-                #:make-ssl-client-stream)
+                #:make-ssl-client-stream
+                #:make-ssl-server-stream)
   #+ccl
   (:import-from #:ccl
                 #:without-interrupts

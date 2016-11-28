@@ -153,14 +153,22 @@
   (lookup-hostname name))
 
 (defun socket::make-ssl-client-stream (socket &key &allow-other-keys)
-  (let ((stream (make-ssl-client-stream (real-stream socket)
-                                         )))
+  (let ((stream (make-ssl-client-stream (real-stream socket))))
     (setf (real-stream socket) stream)
     socket))
 
-(defun socket::make-ssl-server-stream (&rest args)
-  (declare (ignore args))
-  (error "Not implemented -- MAKE-SSL-SERVER-STREAM"))
+(defun socket::make-ssl-server-stream (socket
+                                       &key
+                                         certificate key certificate-password
+                                         verify
+                                         ca-file ca-directory crl-file crl-check method max-depth)
+  (declare (ignore max-depth method crl-check crl-file ca-directory ca-file verify))
+  (let ((stream (make-ssl-server-stream (real-stream socket)
+                                        :certificate certificate
+                                        :key key
+                                        :password certificate-password)))
+    (setf (real-stream socket) stream)
+    socket))
 
 (defun socket:socket-control (socket &key read-timeout write-timeout)
   (declare (ignore socket read-timeout write-timeout))
