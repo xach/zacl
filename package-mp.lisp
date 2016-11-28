@@ -56,10 +56,6 @@
   (:method (process)
     (process-name process)))
 
-(defgeneric mp:process-keeps-lisp-alive-p (process))
-
-(defgeneric (setf mp:process-keeps-lisp-alive-p) (new-value process))
-
 (def-fake-slot mp:process-keeps-lisp-alive-p process :default-value nil)
 
 (defgeneric mp:process-add-run-reason (process object)

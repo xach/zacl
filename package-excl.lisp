@@ -96,10 +96,6 @@ longer anonymous, but has a meaningful name name."
   (declare (ignore class var))
   `(progn ,@body))
 
-(defgeneric excl:device-read (stream buffer start end blocking))
-
-(defgeneric excl:device-close (stream abort))
-
 (define-condition excl:stream-closed-error (error) ())
 (define-condition excl::socket-chunking-end-of-file (error) ())
 
