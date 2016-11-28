@@ -81,7 +81,6 @@
                                          :external-format :latin-1)))
           (replace sequence string :start1 start :end1 end
                    :start2 0 :end2 after-index)
-          (print (list :stream-read-vector "Is this working?"))
           (+ offset after-index)))
       (read-sequence sequence (real-stream stream) :start start :end end)))
 
