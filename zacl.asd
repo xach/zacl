@@ -18,7 +18,8 @@
                #:queues.simple-cqueue
                #:cl-store
                #:alexandria
-               #:md5)
+               #:md5
+               #:cl+ssl)
   :serial t
   :components ((:file "package")
                #+clozure

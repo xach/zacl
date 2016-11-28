@@ -29,7 +29,7 @@
     :reader socket)
    (real-stream
     :initarg :real-stream
-    :reader real-stream
+    :accessor real-stream
     :reader underlying-input-stream
     :reader underlying-output-stream)))
 
@@ -85,7 +85,7 @@
       (read-sequence sequence (real-stream stream) :start start :end end)))
 
 (defmethod stream-force-output ((stream zacl-socket))
-  (force-output (socket-stream (socket stream))))
+  (force-output (real-stream stream)))
 
 (defmethod close ((stream zacl-socket) &key abort)
   (declare (ignore abort))
@@ -152,13 +152,15 @@
 (defun socket:lookup-hostname (name)
   (lookup-hostname name))
 
+(defun socket::make-ssl-client-stream (socket &key &allow-other-keys)
+  (let ((stream (make-ssl-client-stream (real-stream socket)
+                                         )))
+    (setf (real-stream socket) stream)
+    socket))
+
 (defun socket::make-ssl-server-stream (&rest args)
   (declare (ignore args))
   (error "Not implemented -- MAKE-SSL-SERVER-STREAM"))
-
-(defun socket::make-ssl-client-stream (&rest args)
-  (declare (ignore args))
-  (error "Not implemented -- MAKE-SSL-CLIENT-STREAM"))
 
 (defun socket:socket-control (socket &key read-timeout write-timeout)
   (declare (ignore socket read-timeout write-timeout))

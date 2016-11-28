@@ -10,6 +10,8 @@
   (:import-from #:sb-sys
                 ;; XXX Private package
                 #:without-interrupts)
+  (:import-from #:cl+ssl
+                #:make-ssl-client-stream)
   #+ccl
   (:import-from #:ccl
                 #:without-interrupts
