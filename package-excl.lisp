@@ -101,6 +101,7 @@ longer anonymous, but has a meaningful name name."
 (defgeneric excl:device-close (stream abort))
 
 (define-condition excl:stream-closed-error (error) ())
+(define-condition excl::socket-chunking-end-of-file (error) ())
 
 (def-fake-slot excl::stream-property-list stream :default-value nil)
 (def-fake-slot excl:stream-error-identifier stream :default-value nil)
