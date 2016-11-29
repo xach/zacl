@@ -35,7 +35,12 @@
    (bytes-written
     :initarg :bytes-written
     :initform 0
-    :accessor bytes-written)))
+    :accessor bytes-written)
+   (external-format
+    :initarg :external-format
+    :initform :latin-1
+    :reader socket-ef
+    :accessor zacl-cl:stream-external-format)))
 
 (defmethod stream-write-byte :after ((stream zacl-socket) byte)
   (declare (ignore byte))
@@ -47,7 +52,7 @@
 (defmethod stream-write-char ((stream zacl-socket) char)
   (map nil (lambda (octet)
              (stream-write-byte stream octet))
-       (string-to-octets (string char))))
+       (string-to-octets (string char) :external-format (socket-ef stream))))
 
 (defmethod stream-write-sequence :after ((stream zacl-socket) sequence
                                          start end &key &allow-other-keys)
@@ -63,7 +68,8 @@
 (defmethod stream-write-sequence ((stream zacl-socket) sequence start end
                                   &key &allow-other-keys)
   (when (typep sequence 'string)
-    (setf sequence (string-to-octets sequence :start start :end end))
+    (setf sequence (string-to-octets sequence :start start :end end
+                                     :external-format (socket-ef stream)))
     (setf start 0)
     (setf end (length sequence)))
   (write-sequence sequence (real-stream stream) :start start :end end))

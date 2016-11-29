@@ -8,6 +8,7 @@
 (defparameter *external-format-translations*
   '((:octets . :latin1)
     (:latin1-base . :latin1)
+    (:utf-8 . :utf-8)
     (nil . :latin1)))
 
 (defun translate-external-format (external-format)
@@ -183,8 +184,7 @@ values otherwise."
 
 (defun excl:find-external-format (name &key errorp)
   (declare (ignore errorp))
-  (declare (ignore name))
-  :latin-1)
+  (translate-external-format name))
 
 (defun excl:crlf-base-ef (external-format)
   external-format)
@@ -364,7 +364,7 @@ values otherwise."
    (excl::oc-state)
    (external-format
     :initarg :external-format
-    :initform :default
+    :initform :latin1
     :accessor zacl-cl:stream-external-format)))
 
 (defmethod shared-initialize :after ((stream
@@ -399,7 +399,8 @@ values otherwise."
 (defmethod stream-write-string ((stream excl:single-channel-simple-stream) string &optional start end)
   (unless start (setf start 0))
   (unless end (setf end (length string)))
-  (let ((buffer (string-to-octets string :start start :end end)))
+  (let ((buffer (string-to-octets string :start start :end end
+                                  :external-format (zacl-cl:stream-external-format stream))))
     (excl:device-write stream buffer 0 (length buffer) nil)))
 
 (defmethod stream-write-sequence ((stream excl:single-channel-simple-stream) sequence start end &key &allow-other-keys)
