@@ -31,15 +31,34 @@
     :initarg :real-stream
     :accessor real-stream
     :reader underlying-input-stream
-    :reader underlying-output-stream)))
+    :reader underlying-output-stream)
+   (bytes-written
+    :initarg :bytes-written
+    :initform 0
+    :accessor bytes-written)))
+
+(defmethod stream-write-byte :after ((stream zacl-socket) byte)
+  (declare (ignore byte))
+  (incf (bytes-written stream)))
 
 (defmethod stream-write-byte ((stream zacl-socket) byte)
   (write-byte byte (real-stream stream)))
 
 (defmethod stream-write-char ((stream zacl-socket) char)
   (map nil (lambda (octet)
-             (write-byte octet (real-stream stream)))
+             (stream-write-byte stream octet))
        (string-to-octets (string char))))
+
+(defmethod stream-write-sequence :after ((stream zacl-socket) sequence
+                                         start end &key &allow-other-keys)
+  ;; FIXME: Could be affected by string encoding?
+  (declare (ignore sequence))
+  (incf (bytes-written stream) (- end start)))
+
+(defmethod excl::socket-bytes-written ((socket zacl-socket) &optional set)
+  (if set
+      (setf (bytes-written socket) set)
+      (bytes-written socket)))
 
 (defmethod stream-write-sequence ((stream zacl-socket) sequence start end
                                   &key &allow-other-keys)
