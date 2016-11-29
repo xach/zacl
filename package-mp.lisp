@@ -7,10 +7,10 @@
 
 (defmacro mp:with-process-lock (lock-form &body body)
   (declare (ignorable lock-form))
-  `(progn ,@body))
+  `(with-lock-held (,lock-form) ,@body))
 
 (defun mp:make-process-lock (&key name)
-  (cons :mp-lock name))
+  (make-lock name))
 
 (defmacro mp:without-scheduling (&body body)
   `(progn ,@body))
