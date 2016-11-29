@@ -165,7 +165,7 @@
   (declare (ignore max-depth method crl-check crl-file ca-directory ca-file verify))
   (let ((stream (make-ssl-server-stream (real-stream socket)
                                         :certificate certificate
-                                        :key key
+                                        :key (or key certificate)
                                         :password certificate-password)))
     (setf (real-stream socket) stream)
     socket))
