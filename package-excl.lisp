@@ -352,7 +352,8 @@ values otherwise."
 
 (defclass excl:single-channel-simple-stream (zacl-simple-stream)
   ((excl::buffer
-    :initform (make-array 1024 :element-type '(unsigned-byte 8)))
+    :initform (make-array 1024 :element-type '(unsigned-byte 8))
+    :reader buffer)
    (excl::output-handle
     :initarg :output-handle)
    (excl::input-handle
@@ -416,10 +417,22 @@ values otherwise."
 (defmethod ccl:stream-read-vector ((stream excl:single-channel-simple-stream) sequence start end)
   (unless start (setf start 0))
   (unless end (setf end (length sequence)))
-  (let ((result (excl:device-read stream sequence start end nil)))
-    (if (minusp result)
-        0
-        result)))
+  (if (stringp sequence)
+      (let ((result (excl:device-read stream nil 0 nil nil))
+            (buffer (buffer stream )))
+        (when (minusp result)
+          (return-from ccl:stream-read-vector 0))
+        (when (<= (- end start) result)
+          (error "Can't handle buffering yet"))
+        (let ((string (octets-to-string buffer
+                                        :end result
+                                        :external-format (zacl-cl:stream-external-format stream))))
+          (replace sequence string :start1 start :end1 end)
+          (min end (+ start (length string)))))
+      (let ((result (excl:device-read stream sequence start end nil)))
+        (if (minusp result)
+            0
+            result))))
 
 (defmethod stream-force-output ((stream excl:single-channel-simple-stream))
   (force-output (underlying-output-stream stream)))
