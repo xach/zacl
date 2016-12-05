@@ -5,7 +5,7 @@
 
 (in-package #:zacl)
 
-(defmacro mp:with-process-lock (lock-form &body body)
+(defmacro mp:with-process-lock ((lock-form) &body body)
   (declare (ignorable lock-form))
   `(with-lock-held (,lock-form) ,@body))
 
