@@ -24,6 +24,8 @@
   :components ((:file "package")
                #+clozure
                (:file "clozure-specific")
+               #+sbcl
+               (:file "sbcl-specific")
                (:file "defpackage-hack")
                (:file "reader")
                (:file "fake-slots")

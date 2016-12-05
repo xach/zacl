@@ -164,9 +164,29 @@
           (ldb (byte 8  0) ip-integer)))
 
 (defun socket:dotted-to-ipaddr (dotted &key errorp)
-  (if errorp
-      (dotted-to-ipaddr dotted)
-      (ignore-errors (dotted-to-ipaddr dotted))))
+  (let ((result 0)
+        (length (length dotted))
+        (i 0)
+        (start 0))
+    (loop
+      (when (= i 4)
+        (return result))
+      (when (<= length start)
+        (if errorp
+            (error "Malformed IP string - overrun: ~A" dotted)
+            (return nil)))
+      (let* ((end (or (position #\. dotted :start start) length))
+             (integer (ignore-errors
+                        (parse-integer dotted :start start :end end))))
+        (unless integer
+          (if errorp
+              (error "Cannot parse integer at ~A-~A of ~A"
+                     start end dotted)
+              (return nil)))
+        (setf result (logior integer
+                             (ash result 8)))
+        (incf i)
+        (setf start (1+ end))))))
 
 (defmacro socket:with-pending-connect (&body body)
   `(progn ,@body))
