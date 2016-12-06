@@ -3,6 +3,7 @@
 (in-package #:zacl)
 
 (defvar *current-process* nil)
+(defvar *all-processes* nil)
 
 (defgeneric name (process))
 (defgeneric (setf name) (new-value process))
@@ -155,7 +156,10 @@
           (delete object (run-reasons process)))))
 
 (defun make-process (name &key (class 'process) initial-bindings)
-  (make-instance class :initial-bindings initial-bindings :name name))
+  (let ((process (make-instance class :initial-bindings initial-bindings
+                                :name name)))
+    (push process *all-processes*)
+    process))
 
 (defun %make-process (&key name (class 'process) initial-bindings)
   (make-process name :class class :initial-bindings initial-bindings))
