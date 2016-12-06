@@ -405,7 +405,8 @@ values otherwise."
     (excl:device-write stream buffer 0 (length buffer) nil)))
 
 (defmethod stream-write-sequence ((stream excl:single-channel-simple-stream) sequence start end &key &allow-other-keys)
-  (excl:device-write stream sequence start end nil))
+  (excl:device-write stream sequence start end nil)
+  sequence)
 
 #+ccl
 (defmethod ccl:stream-write-vector ((stream excl:single-channel-simple-stream) sequence start end)
