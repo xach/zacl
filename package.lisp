@@ -9,7 +9,8 @@
   #+sbcl
   (:import-from #:sb-sys
                 ;; XXX Private package
-                #:without-interrupts)
+                #:without-interrupts
+                #:fd-stream-fd)
   (:import-from #:cl+ssl
                 #:make-ssl-client-stream
                 #:make-ssl-server-stream)
@@ -77,9 +78,17 @@
                 #:make-thread
                 #:current-thread
                 #:make-lock
+                #:release-lock
+                #:acquire-lock
                 #:with-lock-held
                 #:with-timeout
-                #:timeout)
+                #:timeout
+                #:make-condition-variable
+                #:condition-wait
+                #:condition-notify
+                #:interrupt-thread
+                #:thread-yield
+                #:thread-alive-p)
   (:import-from #:queues
                 #:make-queue
                 #:qpush

@@ -15,7 +15,7 @@
                #:trivial-garbage
                #:trivial-backtrace
                #:split-sequence
-               #:queues.simple-cqueue
+               #:queues.simple-queue
                #:cl-store
                #:alexandria
                #:md5
@@ -26,6 +26,8 @@
                (:file "clozure-specific")
                #+sbcl
                (:file "sbcl-specific")
+               #+sbcl
+               (:file "portable-process")
                (:file "defpackage-hack")
                (:file "reader")
                (:file "fake-slots")

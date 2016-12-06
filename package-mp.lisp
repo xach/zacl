@@ -102,16 +102,21 @@
   ((queue
     :initarg :queue
     :accessor queue
-    :initform (make-queue :simple-cqueue))))
+    :initform (make-queue :simple-queue))
+   (lock
+    :initform (make-lock)
+    :reader lock)))
 
 (defgeneric mp:enqueue (queue thing)
   (:method (queue thing)
-    (qpush (queue queue) thing)))
+    (with-lock-held ((lock queue))
+      (qpush (queue queue) thing))))
 
 (defgeneric mp:dequeue (queue &key wait empty-queue-result whostate)
   (:method (queue &key wait empty-queue-result whostate)
     (declare (ignore whostate wait))
-    (qpop (queue queue) empty-queue-result)))
+    (with-lock-held ((lock queue))
+      (qpop (queue queue) empty-queue-result))))
 
 (defun mp:wait-for-input-available (stream-or-fds
                                     &key wait-function whostate timeout)
