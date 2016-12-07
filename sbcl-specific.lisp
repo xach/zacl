@@ -19,3 +19,12 @@
 
 (defun file-kind (pathname)
   (sb-impl::native-file-kind pathname))
+
+(defun socket-error-identifier (condition)
+  (declare (ignore condition))
+  :unknown)
+
+(defun socket-error-code (condition)
+  (if (search (princ-to-string condition) "Broken pipe")
+      32
+      99))

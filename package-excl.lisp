@@ -103,14 +103,11 @@ longer anonymous, but has a meaningful name name."
 (def-fake-slot excl::stream-property-list stream :default-value nil)
 (def-fake-slot excl:stream-error-identifier stream :default-value nil)
 (def-fake-slot excl:stream-error-code stream :default-value 0)
+(defmethod excl:stream-error-identifier (condition)
+  (socket-error-identifier condition))
 
-#+ccl
-(defmethod excl:stream-error-identifier ((condition ccl:socket-error))
-  (ccl:socket-error-identifier condition))
-
-#+ccl
-(defmethod excl:stream-error-code ((condition ccl:socket-error))
-  (ccl:socket-error-code condition))
+(defmethod excl:stream-error-code (condition)
+  (socket-error-code condition))
 
 ;;; Misc
 
@@ -296,21 +293,11 @@ values otherwise."
   `(call-with-locked-structure ,struct (lambda () ,@body)))
 
 (defmacro excl:incf-atomic (place &optional (delta 1))
-  #+ccl
-  ;; Doesn't work on structure slots on CCL!
-  ;;`(atomic-incf-decf ,place ,delta)
-  `(incf ,place ,delta)
-  ;; XXX
-  #-ccl
+  ;; XXX FIXME
   `(incf ,place ,delta))
 
 (defmacro excl:decf-atomic (place &optional (delta 1))
-  #+ccl
-  ;; Doesn't work on structure slots on CCL!
-  ;;`(atomic-incf-decf ,place (- ,delta))
-  `(decf ,place (- ,delta))
-  ;; XXX
-  #-ccl
+  ;; XXX FIXME
   `(decf ,place (- ,delta)))
 
 (defstruct (basic-lock (:include excl:synchronizing-structure))

@@ -19,13 +19,10 @@
                 #:without-interrupts
                 #:defstaticvar
                 #:symbol-value-in-process
+                #:socket-error-identifier
+                #:socket-error-code
                 ;; XXX private
-                #:*initial-process*
-                )
-  #+ccl
-  (:import-from #:ccl
-                ;; XXX private
-                #:atomic-incf-decf)
+                #:*initial-process*)
   #+ccl
   (:import-from #:ccl
                 #:lookup-hostname
