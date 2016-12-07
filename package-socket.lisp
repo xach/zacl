@@ -92,7 +92,16 @@
                                  &key &allow-other-keys)
   (unless start (setf start 0))
   (unless end (setf end (length sequence)))
-  (read-sequence sequence (real-stream stream) :start start :end end))
+  (if (stringp sequence)
+      (let ((offset start)
+            (buffer (make-array (- end start) :element-type '(unsigned-byte 8))))
+        (let* ((after-index (read-sequence buffer (real-stream stream)))
+               (string (octets-to-string buffer :start 0 :end after-index
+                                         :external-format :latin-1)))
+          (replace sequence string :start1 start :end1 end
+                   :start2 0 :end2 after-index)
+          (+ offset after-index)))
+      (read-sequence sequence (real-stream stream) :start start :end end)))
 
 #+ccl
 (defmethod ccl:stream-read-vector ((stream zacl-socket) sequence start end)
@@ -120,6 +129,8 @@
                              remote-port remote-host
                              format (backlog 5) type nodelay)
   (declare (ignore format type))
+  (unless backlog
+    (setf backlog 5))
   (ecase connect
     (:passive
      (let ((socket
