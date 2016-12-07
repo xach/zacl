@@ -29,25 +29,11 @@
 
 ;;; Processes
 
-(defclass zacl-process (process)
-  ((run-reasons
-    :initform nil
-    :reader mp:process-run-reasons
-    :reader process-run-reasons
-    ;; private to zacl
-    :writer (setf process-run-reasons))
-   (run-reasons-lock
-    :initform (make-lock)
-    :reader run-reasons-lock)
-   (property-list
-    :initform nil
-    :accessor mp:process-property-list)))
-
 (defclass mp:process-lock (excl:lockable-object) ())
 
 (defgeneric mp:make-process (&key name initial-bindings)
   (:method (&key name initial-bindings)
-    (make-process name :class 'zacl-process
+    (make-process name :class 'process
                   :initial-bindings initial-bindings)))
 
 (defgeneric mp:process-thread (process))
@@ -60,15 +46,11 @@
 
 (defgeneric mp:process-add-run-reason (process object)
   (:method (process object)
-    (with-lock-held ((run-reasons-lock process))
-      (push object (process-run-reasons process)))
-    (process-enable process)))
+    (add-run-reason process object)))
 
 (defgeneric mp:process-revoke-run-reason (process object)
   (:method (process object)
-    (with-lock-held ((run-reasons-lock process))
-      (setf (process-run-reasons process)
-            (delete object (process-run-reasons process))))))
+    (revoke-run-reason process object)))
 
 (defgeneric mp:process-allow-schedule ()
   (:method ()
@@ -86,12 +68,12 @@
   (:method ((name string) function &rest arguments)
     (apply #'mp:process-run-function (list :name name) function arguments))
   (:method ((plist list) function &rest arguments)
-    (apply #'process-run-function (list* :class 'zacl-process plist)
+    (apply #'process-run-function plist
            function arguments)))
 
 (defgeneric mp:process-run-reasons (process)
   (:method (process)
-    (process-run-reasons process)))
+    (run-reasons process)))
 
 
 ;;; Queues

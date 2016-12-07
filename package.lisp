@@ -17,19 +17,10 @@
   #+ccl
   (:import-from #:ccl
                 #:without-interrupts
-                #:make-process
-                #:process
-                #:process-kill
-                #:*current-process*
-                #:process-run-function
-                #:process-name
-                #:process-enable
-                #:process-preset
                 #:defstaticvar
                 #:symbol-value-in-process
                 ;; XXX private
                 #:*initial-process*
-                #:process-yield
                 )
   #+ccl
   (:import-from #:ccl

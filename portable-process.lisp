@@ -87,7 +87,7 @@
    (property-list
     :initform nil
     :reader property-list
-    :reader mp:process-property-list)))
+    :accessor mp:process-property-list)))
 
 (defmethod print-object ((process process) stream)
   (print-unreadable-object (process stream :type t :identity t)
