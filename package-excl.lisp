@@ -328,6 +328,10 @@ values otherwise."
                               fundamental-binary-input-stream)
   ())
 
+;; Needed for SBCL
+(defmethod stream-element-type ((stream zacl-simple-stream))
+  '(unsigned-byte 8))
+
 (defmethod stream-write-char ((stream zacl-simple-stream) char)
   (let ((buffer (string-to-octets (string char))))
     (excl:device-write stream buffer 0 (length buffer) nil)))
@@ -410,6 +414,27 @@ values otherwise."
             (buffer (buffer stream )))
         (when (minusp result)
           (return-from ccl:stream-read-vector 0))
+        (when (<= (- end start) result)
+          (error "Can't handle buffering yet"))
+        (let ((string (octets-to-string buffer
+                                        :end result
+                                        :external-format (zacl-cl:stream-external-format stream))))
+          (replace sequence string :start1 start :end1 end)
+          (min end (+ start (length string)))))
+      (let ((result (excl:device-read stream sequence start end nil)))
+        (if (minusp result)
+            0
+            result))))
+
+(defmethod stream-read-sequence ((stream excl:single-channel-simple-stream) sequence start end
+                                 &key &allow-other-keys)
+  (unless start (setf start 0))
+  (unless end (setf end (length sequence)))
+  (if (stringp sequence)
+      (let ((result (excl:device-read stream nil 0 nil nil))
+            (buffer (buffer stream )))
+        (when (minusp result)
+          (return-from stream-read-sequence 0))
         (when (<= (- end start) result)
           (error "Can't handle buffering yet"))
         (let ((string (octets-to-string buffer
