@@ -4,17 +4,23 @@
 
 (defvar *current-process* nil)
 (defvar *all-processes* nil)
+(defvar *process-list-lock* (make-lock "process list lock"))
 
 (defgeneric name (process))
 (defgeneric (setf name) (new-value process))
 
+(defgeneric add-run-reason (process object))
+(defgeneric revoke-run-reason (process object))
 (defgeneric reasons-condition-variable (process))
 (defgeneric reasons-lock (process))
 
-(defgeneric startablep (process))
-(defgeneric runnablep (process))
 (defgeneric killedp (process))
 (defgeneric wait-until-runnable (process))
+
+(defgeneric enable (process))
+(defgeneric kill (process))
+(defgeneric preset (process fun &rest args))
+(defgeneric yield (process))
 
 (defgeneric state (process))
 (defgeneric (setf state) (new-value process))
@@ -24,20 +30,29 @@
 (defgeneric initial-arguments (process))
 (defgeneric (setf initial-arguments) (new-value process))
 
+(defun add-to-all-processes (process)
+  (with-lock-held (*process-list-lock*)
+    (push process *all-processes*)))
+
+(defun remove-from-all-processes (process)
+  (with-lock-held (*process-list-lock*)
+    (setf *all-processes* (delete process *all-processes*))))
 
 (defun make-process-function-wrapper (process)
   (lambda ()
-    (let ((*current-process* process))
-      (loop
-        (catch 'killed
-          (when (killedp process)
-            (return :killed))
-          (setf (state process) :reset)
-          (wait-until-runnable process)
-          (setf (state process) :running)
-          (apply (initial-function process) (initial-arguments process))
-          (unless (reset-action process)
-            (return (setf (state process) :finished))))))))
+    (unwind-protect
+         (let ((*current-process* process))
+           (loop
+             (catch 'killed
+               (when (killedp process)
+                 (return :killed))
+               (setf (state process) :reset)
+               (wait-until-runnable process)
+               (setf (state process) :running)
+               (apply (initial-function process) (initial-arguments process))
+               (unless (reset-action process)
+                 (return (setf (state process) :finished))))))
+      (remove-from-all-processes process))))
 
 (defclass process ()
   ((initial-function
@@ -109,21 +124,22 @@
       (when fun
         (start process)))))
 
-(defmethod process-enable ((process process))
+(defmethod enable ((process process))
   (push :enable (run-reasons process))
   (start process))
 
 (defmethod killedp ((process process))
   (eql (state process) :killed))
 
-(defgeneric process-kill (process)
-  (:method ((process process))
-    (setf (state process) :killed)
+(defmethod kill ((process process))
+  (setf (state process) :killed)
+  (when (thread process)
     (interrupt-thread (thread process)
-                      (lambda () (throw 'killed nil)))
-    process))
+                      (lambda () (throw 'killed nil))))
+  (remove-from-all-processes process)
+  process)
 
-(defun process-preset (process fun &rest args)
+(defmethod preset ((process process) fun &rest args)
   (setf (initial-function process) fun)
   (setf (initial-arguments process) args)
   (maybe-start process)
@@ -131,7 +147,6 @@
 
 (defmethod initialize-instance :after ((process process) &key &allow-other-keys)
   (maybe-start process))
-
 
 (defmethod wait-until-runnable ((process process))
   (loop
@@ -158,13 +173,13 @@
 (defun make-process (name &key (class 'process) initial-bindings)
   (let ((process (make-instance class :initial-bindings initial-bindings
                                 :name name)))
-    (push process *all-processes*)
+    (add-to-all-processes process)
     process))
 
 (defun %make-process (&key name (class 'process) initial-bindings)
   (make-process name :class class :initial-bindings initial-bindings))
 
-(defun process-yield (process)
+(defmethod yield ((process process))
   (unless (eq process *current-process*)
     (error "Can't yield other processes"))
   (thread-yield))
@@ -174,9 +189,9 @@
                     (copy-list name-or-keywords)
                     (list :name name-or-keywords)))
          (process (apply #'%make-process plist)))
-    (apply #'process-preset process function arguments)
+    (apply #'preset process function arguments)
     (setf (reset-action process) nil)
-    (process-enable process)
+    (enable process)
     process))
 
 (defun current-process ()

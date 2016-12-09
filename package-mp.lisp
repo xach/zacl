@@ -54,15 +54,15 @@
 
 (defgeneric mp:process-allow-schedule ()
   (:method ()
-    (process-yield *current-process*)))
+    (yield *current-process*)))
 
 (defgeneric mp:process-kill (process)
   (:method (process)
-    (process-kill process)))
+    (kill process)))
 
 (defgeneric mp:process-preset (process fun &rest args)
   (:method (process fun &rest args)
-    (apply #'process-preset process fun args )))
+    (apply #'preset process fun args )))
 
 (defgeneric mp:process-run-function (name-or-plist function &rest arguments)
   (:method ((name string) function &rest arguments)
