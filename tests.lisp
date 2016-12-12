@@ -22,7 +22,7 @@
     port))
 
 (defvar *test-port* nil)
-(defvar *test-host* "localhost")
+(defvar *test-host* "127.0.0.1")
 (defvar *test-server* nil)
 
 (defun make-test-url (path)
