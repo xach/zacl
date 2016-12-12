@@ -179,6 +179,11 @@
 (defun %make-process (&key name (class 'process) initial-bindings)
   (make-process name :class class :initial-bindings initial-bindings))
 
+(defmethod yield ((process null))
+  ;; *current-process* might be nil if YIELD is not run from a
+  ;; portable process. Don't error.
+  nil)
+
 (defmethod yield ((process process))
   (unless (eq process *current-process*)
     (error "Can't yield other processes"))
