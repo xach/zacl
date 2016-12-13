@@ -26,7 +26,10 @@
                (:file "clozure-specific")
                #+sbcl
                (:file "sbcl-specific")
+               #-clozure
                (:file "portable-process")
+               #+clozure
+               (:file "clozure-process")
                (:file "defpackage-hack")
                (:file "reader")
                (:file "fake-slots")
