@@ -74,6 +74,31 @@
               (excl:string-to-octets thing)))))
     (assemble-octet-array (mapcar #'octify strings))))
 
+(defun call-with-chunking-stream (fun)
+  (excl:with-output-to-buffer (outer*)
+    (let ((outer (flexi-streams:make-flexi-stream outer*)))
+      (let ((inner (make-instance 'net.aserve::chunking-stream
+                                  :output-handle outer
+                                  :external-format :latin1)))
+        (funcall fun inner)
+        (close inner)))))
+
+(defmacro with-chunking-stream ((stream) &body body)
+  `(call-with-chunking-stream (lambda (,stream) ,@body)))
+
+(defun decode-chunked-data (sequence)
+  (excl:with-output-to-buffer (stream)
+    (flexi-streams:with-input-from-sequence (outer sequence)
+      (let ((inner (make-instance 'net.aserve::unchunking-stream
+                                  :input-handle outer
+                                  :external-format :latin1))
+            (buffer (make-octet-vector 32)))
+        (loop
+          (let ((end (read-sequence buffer inner)))
+            (when (zerop end)
+              (return))
+            (write-sequence buffer stream :end end)))))))
+
 
 ;;; Tests
 
@@ -187,6 +212,18 @@
           (is (= end decoded-length))
           (is (equalp (strings-to-octets string) vector)))))))
 
+(test chunking-round-trip
+  (let* ((chunked-data (with-chunking-stream (s)
+                         (write-string "Hello, " s)
+                         (write-byte (char-code #\w) s)
+                         (write-byte (char-code #\o) s)
+                         (write-byte (char-code #\r) s)
+                         (write-byte (char-code #\l) s)
+                         (write-char #\d s)))
+         (unchunked (decode-chunked-data chunked-data))
+         (expected (strings-to-octets "Hello, world")))
+    (is (equalp unchunked expected))))
+
 (test prepend-stream
   (let* ((prefix "prefixed//")
          (text "Hello, world")
@@ -197,3 +234,11 @@
                                             :output-handle stream)))
                       (write-string text s)))))
       (is (equalp buffer expected)))))
+
+(test implementation-specific
+  (is (fboundp 'zacl::stream-unix-fd))
+  (is (fboundp 'zacl::fstat-size))
+  (is (fboundp 'zacl::fstat-mtime))
+  (is (fboundp 'zacl::file-kind))
+  (is (fboundp 'zacl::socket-error-identifier))
+  (is (fboundp 'zacl::socket-error-code)))
