@@ -74,9 +74,17 @@
               (excl:string-to-octets thing)))))
     (assemble-octet-array (mapcar #'octify strings))))
 
+
+;;; Tests
+
 (def-suite zacl-tests)
 
 (in-suite zacl-tests)
+
+(test buffer-output
+  (is (equalp #(42)
+             (excl:with-output-to-buffer (s)
+               (write-byte 42 s)))))
 
 (test make-a-process
   (let ((process (mp:make-process :name "bob")))
@@ -154,12 +162,38 @@
       (is (string= test-string (net.aserve.client:do-http-request
                                    (make-test-url "/get-request")
                                  :method :get
-                                 :query (list (cons variable test-string))
-                                  ))))))
+                                 :query (list (cons variable test-string))))))))
 
-(test buffer-output
-  (is (equalp #(42)
-             (excl:with-output-to-buffer (s)
-               (write-byte 42 s)))))
+;; Needed for SBCL's handling of stream-external-format
+(defmethod zacl-cl:stream-external-format ((stream flexi-streams:vector-stream))
+  nil)
 
+(test unchunking-stream
+  (let* ((string "foo bar baz")
+         (decoded-length (length string))
+         (encoded (strings-to-octets string))
+         (encoded-length (length encoded))
+         (chunked-data (strings-to-octets (format nil "~X" encoded-length)
+                                          :crlf
+                                          encoded :crlf
+                                          ;; chunked eof
+                                          "0" :crlf)))
+    (flexi-streams:with-input-from-sequence (stream chunked-data)
+      (let ((s (make-instance 'net.aserve::unchunking-stream
+                              :external-format :latin1
+                              :input-handle stream))
+            (vector (make-octet-vector decoded-length)))
+        (let ((end (read-sequence vector s)))
+          (is (= end decoded-length))
+          (is (equalp (strings-to-octets string) vector)))))))
 
+(test prepend-stream
+  (let* ((prefix "prefixed//")
+         (text "Hello, world")
+         (expected (strings-to-octets prefix text)))
+    (let ((buffer (excl:with-output-to-buffer (stream)
+                    (let ((s (make-instance 'net.aserve::prepend-stream
+                                            :content prefix
+                                            :output-handle stream)))
+                      (write-string text s)))))
+      (is (equalp buffer expected)))))
