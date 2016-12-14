@@ -8,6 +8,7 @@
                 #:socket-close)
   (:import-from #:net.aserve
                 #:publish
+                #:request-query
                 #:with-http-response
                 #:with-http-body
                 #:*html-stream*)
@@ -47,6 +48,27 @@
   (let ((process (mp:make-process :name "bob")))
     (is (equalp "bob" (mp:process-name process)))
     (mp:process-kill process)))
+
+(test uri-manipulation
+  (let ((uri (net.uri:parse-uri "/"))
+        (query "foo=bar")
+        (host "www.example.com")
+        (fragment "baz")
+        (scheme :http)
+        (full-uri "http://www.example.com/?foo=bar#baz"))
+    (is (null (net.uri:uri-query uri)))
+    (is (null (net.uri:uri-host uri)))
+    (is (null (net.uri:uri-fragment uri)))
+    (is (null (net.uri:uri-scheme uri )))
+    (setf (net.uri:uri-query uri) query)
+    (setf (net.uri:uri-host uri) host)
+    (setf (net.uri:uri-fragment uri) fragment)
+    (setf (net.uri:uri-scheme uri) scheme)
+    (is (equalp (net.uri:uri-query uri) query))
+    (is (equalp (net.uri:uri-host uri) host))
+    (is (equalp (net.uri:uri-fragment uri) fragment))
+    (is (equalp (net.uri:uri-scheme uri) scheme))
+    (is (equalp (net.uri:render-uri uri) full-uri))))
 
 (test utf8-enabled
   (is (= (length "€") 1)))

@@ -40,7 +40,7 @@
                                `(defun ,net-name (uri)
                                   (,name (real-uri uri)))
                                `(defun (setf ,net-name) (new-value uri)
-                                  (setf (,name uri ) new-value)))))
+                                  (setf (,name (real-uri uri) ) new-value)))))
                           names))))
   (net-uri-accessors uri-path
                      uri-host
