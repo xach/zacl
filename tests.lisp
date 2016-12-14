@@ -34,11 +34,45 @@
          (*test-server* (net.aserve:start :port *test-port* :host *test-host*)))
     (unwind-protect
          (funcall fun *test-server*)
+      (sleep 0.25)
       (net.aserve:shutdown :server *test-server*))))
 
 (defmacro with-wserver ((server) &body body)
   `(call-with-wserver (lambda (,server)
                         ,@body)))
+
+(deftype octet ()
+  '(unsigned-byte 8))
+
+(deftype octet-vector (&optional size)
+  `(simple-array octet (,size)))
+
+(defun make-octet-vector (size)
+  (make-array size :element-type 'octet))
+
+(defun octet-vector (&rest octets)
+  (let ((vector (make-octet-vector (length octets))))
+    (replace vector octets)))
+
+(defvar *crlf-vector* (octet-vector 13 10))
+
+(defun assemble-octet-array (component-arrays)
+  (let* ((size (reduce #'+ component-arrays :key #'length))
+         (output-array (make-array size :element-type '(unsigned-byte 8)))
+         (start 0))
+    (dolist (array component-arrays output-array)
+      (replace output-array array :start1 start)
+      (incf start (length array)))))
+
+(defun strings-to-octets (&rest strings)
+  (flet ((octify (thing)
+           (etypecase thing
+             (octet (octet-vector thing))
+             ((eql :crlf) *crlf-vector*)
+             (octet-vector thing)
+             (string
+              (excl:string-to-octets thing)))))
+    (assemble-octet-array (mapcar #'octify strings))))
 
 (def-suite zacl-tests)
 
@@ -78,13 +112,50 @@
     (let ((test-string "Hey €¥© Now"))
       (publish :server server
                :path "/utf8"
-               :function #'(lambda(req ent)
+               :function #'(lambda (req ent)
                              (with-http-response (req ent :content-type "text/html; charset=utf-8")
                                (with-http-body (req ent :external-format :utf-8)
                                  (format *html-stream* test-string)))))
       (is (string= test-string (net.aserve.client:do-http-request
                                    (make-test-url "/utf8")
                                  :external-format :utf-8))))))
+
+(defun request-value (req variable)
+  (cdr (assoc variable (request-query req) :test 'string=)))
+
+(test post-request
+  (with-wserver (server)
+    (let ((test-string "posted")
+          (variable "test"))
+      (publish :server server
+               :path "/post-request"
+               :function #'(lambda (req ent)
+                             (with-http-response (req ent)
+                               (with-http-body (req ent)
+                                 (let ((value (request-value req variable)))
+                                   (write-string value *html-stream*))))))
+      (is (string= test-string (net.aserve.client:do-http-request
+                                   (make-test-url "/post-request")
+                                 :method :post
+                                 :query (list (cons variable test-string))
+                                 ))))))
+
+(test get-request
+  (with-wserver (server)
+    (let ((test-string "getted")
+          (variable "test"))
+      (publish :server server
+               :path "/get-request"
+               :function #'(lambda (req ent)
+                             (with-http-response (req ent)
+                               (with-http-body (req ent)
+                                 (let ((value (request-value req variable)))
+                                   (write-string value *html-stream*))))))
+      (is (string= test-string (net.aserve.client:do-http-request
+                                   (make-test-url "/get-request")
+                                 :method :get
+                                 :query (list (cons variable test-string))
+                                  ))))))
 
 (test buffer-output
   (is (equalp #(42)
