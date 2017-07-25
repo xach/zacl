@@ -52,16 +52,12 @@ Second, you can load the "zacl-aserve" shim system:
 
 ## Limitations
 
-**Only works on Clozure CL**. This is because of time
-constraints. Clozure CL's multiprocess API is the same as Allegro's,
-so it was trivial to support immediately. There is a tiny bit of
-simple-streams support that also relies directly on Clozure stream
-functionality, but creating a portability layer that matches the
-Clozure/Allegro multiprocess API would help ZACL work on many more
-Lisps.
+**Only works on Clozure CL and SBCL**. Support for other
+implementations will be added if there is sufficient demand. I don't
+use other CL implementations with ZACL currently.
 
-**Does not support CGI**. Another victim of time constraints. I do not
-need CGI. CGI functionality requires non-trivial support for managing
+**Does not support CGI**. A victim of time constraints. I do not need
+CGI. CGI functionality requires non-trivial support for managing
 subprocesses, and I am not sure if e.g. UIOP's subprocess management
 API is sufficient.
 
